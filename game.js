@@ -3,6 +3,7 @@ $(document).ready(function(){
     var yloc=0,xloc=0;
     var score=0;
     var won=false;
+    
     //creating emptycells
     for(var i=0;i<16;i++){      
       var xloc=((i)%4)*110;
