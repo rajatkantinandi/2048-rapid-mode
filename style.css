@@ -1,0 +1,144 @@
+.game{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.emptycell{
+  position: absolute;
+  z-index: 2;
+  width:100px;
+  height:100px;
+  margin:10px;
+  background:darkgrey;
+  border-radius:15px;
+}
+.wrapper{
+  position: relative;
+  width: 450px;
+  height: 450px;
+  z-index: 1;
+  background:gray;
+  margin-top: -465px;
+  border-radius: 20px;
+}
+.cell{
+    margin:10px;
+    width:100px;
+    height:65px;
+    padding-top:35px;
+    text-align:center;
+    background:#FBE9E7;
+    border:1px solid #3E2723;
+    border-radius:15px;
+    font-size:30px;
+    position:absolute;
+    z-index: 10;
+  }
+  .board{
+    width:450px;
+    height:450px;
+    border:15px solid black;
+    background:grey;
+    border-radius: 20px;
+  }
+  .two{
+    background: #FBD7D7;
+    font-size:50px;
+    height:85px;
+    padding-top: 15px;
+  }
+  .four{
+    background: #FBB797;
+    font-size:50px;
+    height:85px;
+    padding-top: 15px;
+  }
+  .eight{
+    background: #FB9797;
+    font-size:50px;
+    color: black;
+    height:85px;
+    padding-top: 15px;
+  }
+  .sixteen{
+    background: #FB6957;
+    color: #FBE9E7;
+    font-size: 50px;
+    height:85px;
+    padding-top: 15px;
+  }
+  .thirtyTwo{
+    background: #FB2727;
+    color: #FBE9E7;
+    font-size: 50px;
+    height:85px;
+    padding-top: 15px;
+  }
+  .sixtyFour{
+    background: #aa1111;
+    color:white;
+    font-size: 50px;
+    height:85px;
+    padding-top: 15px;
+  }
+  .oneTwentyEight{
+    background: yellow;
+    font-size: 40px;
+    height:75px;
+    padding-top: 25px;
+  }
+  .twoFiveSix{
+    background:orange;
+    font-size: 40px;
+    color: white;
+    height:75px;
+    padding-top: 25px;
+  }
+  .fiveOneTwo{
+    background:rgb(190, 106, 50);
+    font-size: 40px;
+    color: white;
+    height:75px;
+    padding-top: 25px;
+  }
+  .one024{
+    background: rgb(175, 231, 19);
+    font-size: 35px;
+    height:70px;
+    padding-top: 30px;
+  }
+  .two048{
+    background: green;
+    font-size: 35px;
+    color: #FBE9E7;
+    height:70px;
+    padding-top: 30px;
+  }
+  @media (max-width:500px){
+    body{
+      transform: scale(0.85);
+      margin-top:-50px;
+    }
+    h1{
+      margin-bottom:10px;
+    }
+  } 
+  @media (max-width:400px){
+    body{
+      transform: scale(0.7);
+      margin-top:-70px;
+    }
+    h1{
+      margin-bottom:10px;
+    }
+  }
+  @media (max-width:330px){
+    body{
+      transform: scale(0.6);
+      margin-top:-100px;
+    }
+    h1{
+      margin-bottom:10px;
+    }
+  }
