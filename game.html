@@ -8,13 +8,17 @@
     <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-<div class="game">
-    <h1>2048 Game [Rapid Mode]</h1>
-    <h3>Score: <span class="score"></span></h3>
-    <div class="board">
+    <div class="game">
+        <h1>2048 Game [Rapid Mode]</h1>
+        <h2>Score: <span class="score"></span></h2>
+        <div class="board">
+        </div>
+        <div class="wrapper"></div>
     </div>
-    <div class="wrapper"></div>
-</div>
+    <div class="alertbox">
+        <div class="message"></div>
+        <div><button class="continue">Play Again</button></div>
+    </div>
 <script src="jquery.min.js"></script>
 <script src="jquery.touchSwipe.min.js"></script>
 <script src="game.js"></script>

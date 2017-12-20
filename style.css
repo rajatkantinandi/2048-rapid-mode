@@ -13,6 +13,13 @@
   background:darkgrey;
   border-radius:15px;
 }
+h2{
+  background:#4A148C;
+  color:white;
+  padding:4px 20px;
+  border:1px dotted greenyellow;
+  border-radius:10px;
+}
 .wrapper{
   position: relative;
   width: 450px;
@@ -115,17 +122,68 @@
     height:70px;
     padding-top: 30px;
   }
+.large{
+  background:#99AAE7;
+}
+.alertbox{
+  background: rgba(20,20,90,0.8);
+  color: white;
+  width: 100%;
+  height: 100%;
+  top:0px;
+  left: 0px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  position: absolute;
+  font-size:35px;
+  text-align:center;
+}
+@keyframes showing{
+  0%{
+    visibility: visible;
+    transform: scale(0.2);
+  }
+  100%{
+    visibility: visible;
+    transform: scale(1);
+  }
+}
+.alertbox.show{
+  animation: showing .7s ease;
+  animation-fill-mode: forwards;
+}
+.message{
+  margin-bottom:20px;
+}
+.continue{
+  border: 1px solid #abc;
+  border-radius: 15px;
+  width: 120px;
+  color: white;
+  height: 40px;
+  font-size: 18px;
+  background: rgb(218, 48, 36);
+}
+.continue:hover{
+  border: 1px solid red;
+  background: #aabbcc;
+  color: indigo;
+}
   @media (max-width:500px){
-    body{
+    .game{
       transform: scale(0.85);
       margin-top:-50px;
     }
     h1{
       margin-bottom:10px;
     }
-  } 
-  @media (max-width:400px){
-    body{
+  }
+@media (max-width:400px){
+    .game{
       transform: scale(0.7);
       margin-top:-70px;
     }
@@ -134,7 +192,7 @@
     }
   }
   @media (max-width:330px){
-    body{
+    .game{
       transform: scale(0.6);
       margin-top:-100px;
     }
