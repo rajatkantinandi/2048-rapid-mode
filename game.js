@@ -334,6 +334,7 @@ $(document).ready(function(){
     $(".alertbox").removeClass("show");//hiding the alert box
     if(won){
       won=false;//continue playing on win
+      $(".continue").text("New Game");
     }
     else {
       cells=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];//if try again on game over setting all cells empty
