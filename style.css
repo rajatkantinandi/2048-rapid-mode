@@ -122,6 +122,20 @@
     height:70px;
     padding-top: 30px;
   }
+  .four096{
+    background: indigo;
+    font-size: 35px;
+    color: #FBE9E7;
+    height:70px;
+    padding-top: 30px;
+  }
+  .eight192{
+    background: #4444cc;
+    font-size: 35px;
+    color: #FBE9E7;
+    height:70px;
+    padding-top: 30px;
+  }
 .large{
   background:#99AAE7;
 }

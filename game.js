@@ -4,7 +4,7 @@ $(document).ready(function(){
   var score=0;
   var won=false;
   //creating emptycells
-  for(var i=0;i<16;i++){      
+  for(var i=0;i<16;i++){
     var xloc=((i)%4)*110;
     var yloc=Math.floor((i)/4)*110;
     $(".wrapper").append("<div class='emptycell emp"+i+"'></div>");
@@ -68,10 +68,10 @@ $(document).ready(function(){
     if(shift(ev)){//check if any shift or movement happend in a direction or any cells merged
     //getting indices of zero values or empty cells of cells array into idx & selecting any random value
     var zeros=[];
-    var idx = cells.indexOf(0);        
+    var idx = cells.indexOf(0);
     while(idx!=-1){
       zeros.push(idx);
-      idx = cells.indexOf(0, idx + 1);        
+      idx = cells.indexOf(0, idx + 1);
     }
     idx=zeros[Math.floor(Math.random()*zeros.length)];
     var chanceOf4=Math.random();//chance of appearing four
@@ -140,6 +140,12 @@ $(document).ready(function(){
       }
       else if (cell.value == 2048) {
         cclass = "two048";
+      }
+      else if(cell.value==4096){
+        cclass="four096";
+      }
+      else if (cell.value==8192) {
+        cclass="eight192";
       }
     }
   }
@@ -314,7 +320,7 @@ $(document).ready(function(){
     }
     return true;
   }
-  //function to check if there is no merge possible 
+  //function to check if there is no merge possible
   function noMatch(){
     for(var i=0;i<15;i++){
       if(cells[i].hasOwnProperty("value")&&(((i+1)%4!=0&&cells[i].value==cells[i+1].value)||(i<12&&cells[i].value==cells[i+4].value))){
@@ -329,7 +335,7 @@ $(document).ready(function(){
   $(".continue").text(btntxt);
   $(".alertbox").addClass("show");
   }
-  //function for coninue button onlick 
+  //function for coninue button onlick
   $(".continue").click(function(){
     $(".alertbox").removeClass("show");//hiding the alert box
     if(won){
@@ -340,7 +346,7 @@ $(document).ready(function(){
       cells=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];//if try again on game over setting all cells empty
       yloc=0,xloc=0;
       score=0;
-      init();//calling the initialize funtion 
+      init();//calling the initialize funtion
     }
   });
   //function to generate random integer in a range
