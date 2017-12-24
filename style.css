@@ -13,12 +13,21 @@
   background:darkgrey;
   border-radius:15px;
 }
+.scoring{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 .scoreboard{
   background:#4A148C;
   color:white;
   padding:10px 20px;
   border:1px dotted greenyellow;
   border-radius:10px;
+  text-align: center;
+  width: 90px;
+  margin-right: 10px;
 }
 .wrapper{
   position: relative;
@@ -176,9 +185,8 @@
 .continue{
   border: 1px solid #abc;
   border-radius: 15px;
-  width: 120px;
+  padding: 5px 25px;
   color: white;
-  height: 40px;
   font-size: 18px;
   background: rgb(218, 48, 36);
 }

@@ -1,9 +1,9 @@
 $(document).ready(function(){
   //initilization with zero values for all cells
-  var localcells=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
   var cells=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
   var yloc=0,xloc=0;
   var score=(localStorage.getItem("score")==undefined)?0:Math.round(localStorage.getItem("score"));
+  var topscore=(localStorage.getItem("topscore")==undefined)?0:Math.round(localStorage.getItem("topscore"));
   var won=false;
   //creating emptycells
   for(var i=0;i<16;i++){
@@ -12,25 +12,6 @@ $(document).ready(function(){
     $(".wrapper").append("<div class='emptycell emp"+i+"'></div>");
     $(".emp"+i).css("transform","translate("+xloc+"px,"+yloc+"px)");
   }
-  //The class cell & methods
-  var Cell=function(index,val){
-        this.index=index;
-        this.value=val;
-  }
-  Cell.prototype.move=function(ev){
-    cells[this.index-1]=0;
-    var cell=$("."+this.index);
-    if(ev==40){//move down
-      this.index=(this.index/4>3)?this.index:this.index+4;
-    }else if(ev==38){//move up
-      this.index=(this.index/4<=1)?this.index:this.index-4;
-    }else if(ev==37){//move left
-      this.index=(this.index%4==1)?this.index:this.index-1;
-    }else if(ev==39){//move right
-      this.index=(this.index%4==0)?this.index:this.index+1;
-    }
-    cells[this.index-1]=this;
-  }
   //Initialization function with 2 random cells with 2
   function init(){
   if(localStorage.getItem('cells')==undefined){
@@ -38,16 +19,11 @@ $(document).ready(function(){
   while(a1==a2){
     a2=randInt(1,16);
   }
-  cells[a1-1]=new Cell(a1,2);
-  cells[a2-1]=new Cell(a2,2);
+  cells[a1-1]=2;
+  cells[a2-1]=2;
   }
   else{
-    localcells=JSON.parse(localStorage.getItem('cells'));
-    for(i=0;i<localcells.length;i++){
-      if(localcells[i]!=0) {
-        cells[i]=new Cell(i+1,localcells[i]);
-      }
-    }
+    cells=JSON.parse(localStorage.getItem('cells'));
   }
   redraw();
   }
@@ -88,16 +64,15 @@ $(document).ready(function(){
     idx=zeros[Math.floor(Math.random()*zeros.length)];
     var chanceOf4=Math.random();//chance of appearing four
     if(chanceOf4<0.1){//10% times create 4
-      cells[idx]=new Cell(idx+1,4);
+      cells[idx]=4;
     }
-    else cells[idx]=new Cell(idx+1,2);//90% times create new cell with 2
+    else cells[idx]=2;//90% times create new cell with 2
   }
   redraw();//redrawing the modified cells
   }
 
   function redraw(){
     $(".board").html("");//emptying the board
-    localcells=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     for(var i=0;i<cells.length;i++){
       if(cells[i]!=0){
       var index=i+1;
@@ -105,14 +80,16 @@ $(document).ready(function(){
       var yloc=Math.floor((index-1)/4)*110;//calculating y pos
       var cclass="large";//color class
       setcolorclass(cells[i]);//setting color
-      $(".board").append("<div class='cell "+index+" "+cclass+"'>"+cells[i].value+"</div>");//creating div
+      $(".board").append("<div class='cell "+index+" "+cclass+"'>"+cells[i]+"</div>");//creating div
       $("."+index).css("transform","translate("+xloc+"px,"+yloc+"px)");//positioning the div
-      localcells[i]=cells[i].value;
       }
     }
-    $(".score").text(score);//display score
-    localStorage.setItem("score",score);
-    localStorage.setItem('cells', JSON.stringify(localcells));
+    $(".score").text(score);
+    $(".topscore").text(topscore);//display score
+    localStorage.setItem("score",score);    
+    localStorage.setItem("topscore",topscore);
+    localStorage.setItem('cells', JSON.stringify(cells));
+    console.log(cells);
     //check if won
     if(won){
       showalert("Congrats You win!!","Continue");
@@ -124,43 +101,43 @@ $(document).ready(function(){
     }
     //function to set colors & font class
     function setcolorclass(cell) {
-      if (cell.value == 2) {
+      if (cell== 2) {
         cclass = "two";
       }
-      else if (cell.value == 4) {
+      else if (cell== 4) {
         cclass = "four";
       }
-      else if (cell.value == 8) {
+      else if (cell == 8) {
         cclass = "eight";
       }
-      else if (cell.value == 16) {
+      else if (cell== 16) {
         cclass = "sixteen";
       }
-      else if (cell.value == 32) {
+      else if (cell== 32) {
         cclass = "thirtyTwo";
       }
-      else if (cell.value == 64) {
+      else if (cell== 64) {
         cclass = "sixtyFour";
       }
-      else if (cell.value == 128) {
+      else if (cell== 128) {
         cclass = "oneTwentyEight";
       }
-      else if (cell.value == 256) {
+      else if (cell== 256) {
         cclass = "twoFiveSix";
       }
-      else if (cell.value == 512) {
+      else if (cell== 512) {
         cclass = "fiveOneTwo";
       }
-      else if (cell.value == 1024) {
+      else if (cell== 1024) {
         cclass = "one024";
       }
-      else if (cell.value == 2048) {
+      else if (cell== 2048) {
         cclass = "two048";
       }
-      else if(cell.value==4096){
+      else if(cell==4096){
         cclass="four096";
       }
-      else if (cell.value==8192) {
+      else if (cell==8192) {
         cclass="eight192";
       }
     }
@@ -181,7 +158,8 @@ $(document).ready(function(){
         }
         if(j>=i-12){//if any empty cell
           for(var k=0;k<empty;k++){//move upto num of empty cell
-            cells[j-1].move(ev);
+            cells[j+3]=cells[j-1];
+            cells[j-1]=0;
             j=j+4;
             moved=true;////setting moved to true if movement happend
           }
@@ -206,7 +184,8 @@ $(document).ready(function(){
         }
         if(j<=i+12){
           for(var k=0;k<empty;k++){
-            cells[j-1].move(ev);
+            cells[j-5]=cells[j-1];
+            cells[j-1]=0;
             j=j-4;
             moved=true;
           }
@@ -231,7 +210,8 @@ $(document).ready(function(){
         }
         if(j<=i+3){
           for(var k=0;k<empty;k++){
-            cells[j-1].move(ev);
+            cells[j-2]=cells[j-1];
+            cells[j-1]=0;
             j=j-1;
             moved=true;
           }
@@ -256,7 +236,8 @@ $(document).ready(function(){
         }
         if(j>=i-3){
           for(var k=0;k<empty;k++){
-            cells[j-1].move(ev);
+            cells[j]=cells[j-1];
+            cells[j-1]=0;
             j=j+1;
             moved=true;
           }
@@ -274,11 +255,12 @@ $(document).ready(function(){
   function combine(ev,start){
     if(ev==40){//combine down
       for(var i=start;i>start-12;i-=4){//from start upwards
-        if(cells[i-1].hasOwnProperty("value")&&cells[i-1].value==cells[i-5].value){//if cell & upper cell are equal
+        if(cells[i-1]!=0&&cells[i-1]==cells[i-5]){//if cell & upper cell are equal
           cells[i-5]=0;//emptying upper cell
-          cells[i-1].value*=2;//doubling the original cell
-          score+=cells[i-1].value;
-          if(cells[i-1].value==2048){
+          cells[i-1]*=2;//doubling the original cell
+          score+=cells[i-1];
+          topscore=(score>topscore)?score:topscore;
+          if(cells[i-1]==2048){
             won=true;//set won to true if 2048 is formed
           }
           return true;//return true on any merge
@@ -286,11 +268,12 @@ $(document).ready(function(){
       }
     } else if(ev==38){//combine up in similar fasion
       for(var i=start;i<start+12;i+=4){
-        if(cells[i-1].hasOwnProperty("value")&&cells[i-1].value==cells[i+3].value){
+        if(cells[i-1]!=0&&cells[i-1]==cells[i+3]){
           cells[i+3]=0;
-          cells[i-1].value*=2;
-          score+=cells[i-1].value;
-          if(cells[i-1].value==2048){
+          cells[i-1]*=2;
+          score+=cells[i-1];
+          topscore=(score>topscore)?score:topscore;
+          if(cells[i-1]==2048){
             won=true;
           }
           return true;
@@ -298,11 +281,12 @@ $(document).ready(function(){
       }
     } else if(ev==37){//combine left in similar fasion
       for(var i=start;i<start+3;i++){
-        if(cells[i-1].hasOwnProperty("value")&&cells[i-1].value==cells[i].value){
+        if(cells[i-1]!=0&&cells[i-1]==cells[i]){
           cells[i]=0;
-          cells[i-1].value*=2;
-          score+=cells[i-1].value;
-          if(cells[i-1].value==2048){
+          cells[i-1]*=2;
+          score+=cells[i-1];
+          topscore=(score>topscore)?score:topscore;
+          if(cells[i-1]==2048){
             won=true;
           }
           return true;
@@ -310,11 +294,12 @@ $(document).ready(function(){
       }
     } else if(ev==39){//combine right in similar fasion
       for(var i=start;i>start-3;i--){
-        if(cells[i-1].hasOwnProperty("value")&&cells[i-1].value==cells[i-2].value){
+        if(cells[i-1]!=0&&cells[i-1]==cells[i-2]){
           cells[i-2]=0;
-          cells[i-1].value*=2;
-          score+=cells[i-1].value;
-          if(cells[i-1].value==2048){
+          cells[i-1]*=2;
+          score+=cells[i-1];
+          topscore=(score>topscore)?score:topscore;
+          if(cells[i-1]==2048){
             won=true;
           }
           return true;
@@ -339,7 +324,7 @@ $(document).ready(function(){
   //function to check if there is no merge possible
   function noMatch(){
     for(var i=0;i<15;i++){
-      if(cells[i].hasOwnProperty("value")&&(((i+1)%4!=0&&cells[i].value==cells[i+1].value)||(i<12&&cells[i].value==cells[i+4].value))){
+      if(cells[i]!=0&&(((i+1)%4!=0&&cells[i]==cells[i+1])||(i<12&&cells[i]==cells[i+4]))){
         return false;
       }
     }
