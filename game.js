@@ -1,7 +1,9 @@
 $(document).ready(function(){
-  var cells=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];//initilization with zero values for all cells
+  //initilization with zero values for all cells
+  var localcells=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+  var cells=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
   var yloc=0,xloc=0;
-  var score=0;
+  var score=(localStorage.getItem("score")==undefined)?0:Math.round(localStorage.getItem("score"));
   var won=false;
   //creating emptycells
   for(var i=0;i<16;i++){
@@ -31,12 +33,22 @@ $(document).ready(function(){
   }
   //Initialization function with 2 random cells with 2
   function init(){
+  if(localStorage.getItem('cells')==undefined){
   var a1=randInt(1,16),a2=randInt(1,16);
   while(a1==a2){
     a2=randInt(1,16);
   }
   cells[a1-1]=new Cell(a1,2);
   cells[a2-1]=new Cell(a2,2);
+  }
+  else{
+    localcells=JSON.parse(localStorage.getItem('cells'));
+    for(i=0;i<localcells.length;i++){
+      if(localcells[i]!=0) {
+        cells[i]=new Cell(i+1,localcells[i]);
+      }
+    }
+  }
   redraw();
   }
 
@@ -59,7 +71,7 @@ $(document).ready(function(){
   });
 
   //Key Events function
-  $(window).keydown(function(ev){
+  $(window).on("keydown",function(ev){
       act(ev.which);
   });
 
@@ -85,6 +97,7 @@ $(document).ready(function(){
 
   function redraw(){
     $(".board").html("");//emptying the board
+    localcells=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     for(var i=0;i<cells.length;i++){
       if(cells[i]!=0){
       var index=i+1;
@@ -94,9 +107,12 @@ $(document).ready(function(){
       setcolorclass(cells[i]);//setting color
       $(".board").append("<div class='cell "+index+" "+cclass+"'>"+cells[i].value+"</div>");//creating div
       $("."+index).css("transform","translate("+xloc+"px,"+yloc+"px)");//positioning the div
-      $(".score").text(score);//display score
+      localcells[i]=cells[i].value;
       }
     }
+    $(".score").text(score);//display score
+    localStorage.setItem("score",score);
+    localStorage.setItem('cells', JSON.stringify(localcells));
     //check if won
     if(won){
       showalert("Congrats You win!!","Continue");
@@ -346,6 +362,8 @@ $(document).ready(function(){
       cells=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];//if try again on game over setting all cells empty
       yloc=0,xloc=0;
       score=0;
+      localStorage.removeItem("cells");
+      localStorage.removeItem("score");
       init();//calling the initialize funtion
     }
   });
