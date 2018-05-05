@@ -186,7 +186,17 @@
     font-size: 35px;
     text-align: center;
 }
-
+.mode-toggle{
+    border-radius: 10px;
+    padding: 5px 20px;
+    font-size: 1.2rem;
+    background: grey;
+    color: darkgray;
+}
+.btn-selected{
+    background: #4444cc;
+    color: white;
+}
 @keyframes showing {
     0% {
         visibility: visible;

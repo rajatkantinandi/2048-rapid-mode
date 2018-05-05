@@ -4,6 +4,7 @@ $(document).ready(function () {
   var yloc = 0, xloc = 0;
   var score = (localStorage.getItem("score") == undefined) ? 0 : Math.round(localStorage.getItem("score"));
   var topscore = (localStorage.getItem("topscore") == undefined) ? 0 : Math.round(localStorage.getItem("topscore"));
+  var rapidmode=true;
   var won = false;
   //creating emptycells
   for (var i = 0; i < 16; i++) {
@@ -147,104 +148,116 @@ $(document).ready(function () {
           var empty = 0;
           for (var i = 13; i <= 16; i++) {//iterating over columns
               var j = i;
-              var combined = true;
-              while (combined) {//checking whether any cell have been merged then continue movement on that col
-                  combined = false;
-                  for (var l = i; l >= i - 12; l -= 4) {//iterating over cells in a column
-                      for (j = l; j >= i - 12 && isEmpty(j); j -= 4) {//checking empty cells below each non empty cell
-                          empty++;//storing num of empty cells
-                      }
-                      if (j >= i - 12) {//if any empty cell
-                          for (var k = 0; k < empty; k++) {//move upto num of empty cell
-                              cells[j + 3] = cells[j - 1];
-                              cells[j - 1] = 0;
-                              j = j + 4;
-                              moved = true;////setting moved to true if movement happend
-                          }
-                      }
-                      empty = 0;
-                  }
+              var combined = false;
+              function godown(){
+                for (var l = i; l >= i - 12; l -= 4) {//iterating over cells in a column
+                    for (j = l; j >= i - 12 && isEmpty(j); j -= 4) {//checking empty cells below each non empty cell
+                        empty++;//storing num of empty cells
+                    }
+                    if (j >= i - 12) {//if any empty cell
+                        for (var k = 0; k < empty; k++) {//move upto num of empty cell
+                            cells[j + 3] = cells[j - 1];
+                            cells[j - 1] = 0;
+                            j = j + 4;
+                            moved = true;////setting moved to true if movement happend
+                        }
+                    }
+                    empty = 0;
+                }
+              }
+              do {//checking whether any cell have been merged then continue movement on that col
+                  godown();
                   combined = combine(ev, i);//checking for merge possibility & merfing
                   if (combined) moved = true;//setting moved to true if combined
-              }
+              }while (combined&rapidmode);
+              godown();
           }
       }
       if (ev == 38) {//shifting up in similar fasion
           var empty = 0;
           for (var i = 1; i <= 4; i++) {
               var j;
-              var combined = true;
-              while (combined) {
-                  combined = false;
-                  for (var l = i; l <= i + 12; l += 4) {
-                      for (j = l; j <= i + 12 && isEmpty(j); j += 4) {
-                          empty++;
-                      }
-                      if (j <= i + 12) {
-                          for (var k = 0; k < empty; k++) {
-                              cells[j - 5] = cells[j - 1];
-                              cells[j - 1] = 0;
-                              j = j - 4;
-                              moved = true;
-                          }
-                      }
-                      empty = 0;
-                  }
+              var combined = false;
+              function goup(){
+                for (var l = i; l <= i + 12; l += 4) {
+                    for (j = l; j <= i + 12 && isEmpty(j); j += 4) {
+                        empty++;
+                    }
+                    if (j <= i + 12) {
+                        for (var k = 0; k < empty; k++) {
+                            cells[j - 5] = cells[j - 1];
+                            cells[j - 1] = 0;
+                            j = j - 4;
+                            moved = true;
+                        }
+                    }
+                    empty = 0;
+                }
+              }
+              do {
+                  goup();
                   combined = combine(ev, i);
                   if (combined) moved = true;
-              }
+              }while (combined&rapidmode);
+              goup();
           }
       }
       if (ev == 37) {//shifting left in similar fasion
           var empty = 0;
           for (var i = 1; i <= 13; i += 4) {
               var j;
-              var combined = true;
-              while (combined) {
-                  combined = false;
-                  for (var l = i; l <= i + 3; l++) {
-                      for (j = l; j <= i + 3 && isEmpty(j); j++) {
-                          empty++;
-                      }
-                      if (j <= i + 3) {
-                          for (var k = 0; k < empty; k++) {
-                              cells[j - 2] = cells[j - 1];
-                              cells[j - 1] = 0;
-                              j = j - 1;
-                              moved = true;
-                          }
-                      }
-                      empty = 0;
-                  }
+              var combined = false;
+              function goleft(){                  
+                for (var l = i; l <= i + 3; l++) {
+                    for (j = l; j <= i + 3 && isEmpty(j); j++) {
+                        empty++;
+                    }
+                    if (j <= i + 3) {
+                        for (var k = 0; k < empty; k++) {
+                            cells[j - 2] = cells[j - 1];
+                            cells[j - 1] = 0;
+                            j = j - 1;
+                            moved = true;
+                        }
+                    }
+                    empty = 0;
+                }
+              }
+              do{
+                  goleft();
                   combined = combine(ev, i);
                   if (combined) moved = true;
-              }
+              }while (combined&rapidmode);
+              goleft();
           }
       }
       if (ev == 39) {//shifting right in similar fasion
           var empty = 0;
           for (var i = 4; i <= 16; i += 4) {
               var j;
-              var combined = true;
-              while (combined) {
-                  combined = false;
-                  for (var l = i; l >= i - 3; l--) {
-                      for (j = l; j >= i - 3 && isEmpty(j); j--) {
-                          empty++;
-                      }
-                      if (j >= i - 3) {
-                          for (var k = 0; k < empty; k++) {
-                              cells[j] = cells[j - 1];
-                              cells[j - 1] = 0;
-                              j = j + 1;
-                              moved = true;
-                          }
-                      }
-                      empty = 0;
-                  }
+              var combined = false;
+              function goright(){                  
+                for (var l = i; l >= i - 3; l--) {
+                    for (j = l; j >= i - 3 && isEmpty(j); j--) {
+                        empty++;
+                    }
+                    if (j >= i - 3) {
+                        for (var k = 0; k < empty; k++) {
+                            cells[j] = cells[j - 1];
+                            cells[j - 1] = 0;
+                            j = j + 1;
+                            moved = true;
+                        }
+                    }
+                    empty = 0;
+                }
+              }
+              do{
+                  goright();
                   combined = combine(ev, i);
                   if (combined) moved = true;
-              }
+              }while (combined&rapidmode);
+              goright();
           }
       }
       return moved;//returning whether movement or merging has happened
@@ -328,6 +341,7 @@ $(document).ready(function () {
       }
       return true;
   }
+
   //function to show alert on win or game over
   function showalert(message, btntxt) {
       $(".message").html(message);
@@ -348,6 +362,17 @@ $(document).ready(function () {
       else {
           restart();
       }
+  });
+  $(".mode-toggle").click(function(){
+      $(this).addClass("btn-selected");
+        if($(this).attr("id")=="normal-mode"){
+            rapidmode=false;
+            $("#rapid-mode").removeClass("btn-selected");
+        }
+        else if($(this).attr("id")=="rapid-mode"){
+            rapidmode=true;
+            $("#normal-mode").removeClass("btn-selected");
+        }
   });
   $("#newgame").click(function () {
       restart();
