@@ -27,7 +27,7 @@ $(document).ready(function () {
         } else {
             cells = JSON.parse(localStorage.getItem('cells'));
         }
-        redraw();
+        drawAll();
     }
 
     init(); //initialize
@@ -73,20 +73,20 @@ $(document).ready(function () {
             redraw();
         }, 150); //redrawing the modified cells
     }
-
-    function redraw() {
+    function drawAll(){
         $(".board").html(""); //emptying the board
         for (var i = 0; i < cells.length; i++) {
             if (cells[i] != 0) {
                 var index = i + 1;
                 var xloc = ((index - 1) % 4) * 110; //calculating x pos
                 var yloc = Math.floor((index - 1) / 4) * 110; //calculating y pos
-                var cclass = "large"; //color class
-                setcolorclass(cells[i]); //setting color
-                $(".board").append("<div class='cell " + index + " " + cclass + "'>" + cells[i] + "</div>"); //creating div
+                $(".board").append("<div class='cell " + index + " " + getcolorclass(cells[i]) + "'>" + cells[i] + "</div>"); //creating div
                 $("." + index).css("transform", "translate(" + xloc + "px," + yloc + "px)"); //positioning the div
             }
         }
+    }
+    function redraw() {
+        drawAll();
         $(".score").text(score);
         $(".topscore").text(topscore); //display score
         localStorage.setItem("score", score);
@@ -99,36 +99,6 @@ $(document).ready(function () {
         //check for game over
         if (allFilled(1, 16) && noMatch()) { //conditions are all filled & nomatch for merging
             showalert("Game Over!!", "Play Again");
-        }
-        //function to set colors & font class
-        function setcolorclass(cell) {
-            if (cell == 2) {
-                cclass = "two";
-            } else if (cell == 4) {
-                cclass = "four";
-            } else if (cell == 8) {
-                cclass = "eight";
-            } else if (cell == 16) {
-                cclass = "sixteen";
-            } else if (cell == 32) {
-                cclass = "thirtyTwo";
-            } else if (cell == 64) {
-                cclass = "sixtyFour";
-            } else if (cell == 128) {
-                cclass = "oneTwentyEight";
-            } else if (cell == 256) {
-                cclass = "twoFiveSix";
-            } else if (cell == 512) {
-                cclass = "fiveOneTwo";
-            } else if (cell == 1024) {
-                cclass = "one024";
-            } else if (cell == 2048) {
-                cclass = "two048";
-            } else if (cell == 4096) {
-                cclass = "four096";
-            } else if (cell == 8192) {
-                cclass = "eight192";
-            }
         }
     }
     //movement function
@@ -279,8 +249,11 @@ $(document).ready(function () {
             for (var i = start; i > start - 12; i -= 4) { //from start upwards
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i - 5]) { //if cell & upper cell are equal
                     cells[i - 5] = 0; //emptying upper cell
-                    cells[i - 1] *= 2; //doubling the original cell
                     TweenMax.to(".cell."+(i-4),0.1,{css:{marginTop:110+"px",opacity:0.2},ease:Power1.easeIn});
+                    $(".cell."+i).removeClass(getcolorclass(cells[i-1]));
+                    cells[i - 1] *= 2; //doubling the original cell
+                    $(".cell."+i).addClass(getcolorclass(cells[i-1]));
+                    setTimeout(function(){$(".cell."+(i-4)).remove();},100);
                     score += cells[i - 1];
                     topscore = (score > topscore) ? score : topscore;
                     if (cells[i - 1] == 2048) {
@@ -293,8 +266,11 @@ $(document).ready(function () {
             for (var i = start; i < start + 12; i += 4) {
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i + 3]) {
                     cells[i + 3] = 0;
-                    cells[i - 1] *= 2;
                     TweenMax.to(".cell."+(i+4),0.1,{css:{marginTop:-110+"px",opacity:0.2},ease:Power1.easeIn});
+                    $(".cell."+i).removeClass(getcolorclass(cells[i-1]));
+                    cells[i - 1] *= 2; //doubling the original cell
+                    $(".cell."+i).addClass(getcolorclass(cells[i-1]));
+                    setTimeout(function(){$(".cell."+(i+4)).remove();},100);
                     score += cells[i - 1];
                     topscore = (score > topscore) ? score : topscore;
                     if (cells[i - 1] == 2048) {
@@ -307,8 +283,11 @@ $(document).ready(function () {
             for (var i = start; i < start + 3; i++) {
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i]) {
                     cells[i] = 0;
-                    cells[i - 1] *= 2;
                     TweenMax.to(".cell."+i+1,0.1,{css:{marginLeft:-110+"px",opacity:0.2},ease:Power1.easeIn});
+                    $(".cell."+i).removeClass(getcolorclass(cells[i-1]));
+                    cells[i - 1] *= 2; //doubling the original cell
+                    $(".cell."+i).addClass(getcolorclass(cells[i-1]));
+                    setTimeout(function(){$(".cell."+(i+1)).remove();},100);
                     score += cells[i - 1];
                     topscore = (score > topscore) ? score : topscore;
                     if (cells[i - 1] == 2048) {
@@ -321,8 +300,11 @@ $(document).ready(function () {
             for (var i = start; i > start - 3; i--) {
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i - 2]) {
                     cells[i - 2] = 0;
-                    cells[i - 1] *= 2;
                     TweenMax.to(".cell."+(i-1),0.1,{css:{marginLeft:110+"px",opacity:0.2},ease:Power1.easeIn});
+                    $(".cell."+i).removeClass(getcolorclass(cells[i-1]));
+                    cells[i - 1] *= 2; //doubling the original cell
+                    $(".cell."+i).addClass(getcolorclass(cells[i-1]));
+                    setTimeout(function(){$(".cell."+(i-1)).remove();},100);
                     score += cells[i - 1];
                     topscore = (score > topscore) ? score : topscore;
                     if (cells[i - 1] == 2048) {
@@ -390,7 +372,38 @@ $(document).ready(function () {
     $("#newgame").click(function () {
         restart();
     });
-
+    //function to get colors & font class
+    function getcolorclass(cell) {
+        var cclass="large";
+        if (cell == 2) {
+            cclass = "two";
+        } else if (cell == 4) {
+            cclass = "four";
+        } else if (cell == 8) {
+            cclass = "eight";
+        } else if (cell == 16) {
+            cclass = "sixteen";
+        } else if (cell == 32) {
+            cclass = "thirtyTwo";
+        } else if (cell == 64) {
+            cclass = "sixtyFour";
+        } else if (cell == 128) {
+            cclass = "oneTwentyEight";
+        } else if (cell == 256) {
+            cclass = "twoFiveSix";
+        } else if (cell == 512) {
+            cclass = "fiveOneTwo";
+        } else if (cell == 1024) {
+            cclass = "one024";
+        } else if (cell == 2048) {
+            cclass = "two048";
+        } else if (cell == 4096) {
+            cclass = "four096";
+        } else if (cell == 8192) {
+            cclass = "eight192";
+        }
+        return cclass;
+    }
     function restart() {
         cells = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; //if try again on game over setting all cells empty
         yloc = 0, xloc = 0;
