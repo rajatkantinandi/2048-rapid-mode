@@ -6,4 +6,5 @@ Created in javascipt using jquery framework, juery touchSwipe add-on for swipe e
 Supports both swipe & arrow keys.
 
 Github hosted link: https://rajatkantinandi.github.io/2048-rapid-mode/
+
 Codepen link: https://codepen.io/rajatkantinandi/full/PEPxzX/
