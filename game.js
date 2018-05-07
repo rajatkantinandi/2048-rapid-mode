@@ -67,13 +67,14 @@ $(document).ready(function () {
             var chanceOf4 = Math.random(); //chance of appearing four
             if (chanceOf4 < 0.1) { //10% times create 4
                 cells[idx] = 4;
-            } else cells[idx] = 2; //90% times create new cell with 2
+            } else cells[idx] = 2; //90% times create new cell with 2  
+            setTimeout(function () {
+                redraw(idx);
+            }, 150); //redrawing the modified cells          
         }
-        setTimeout(function () {
-            redraw();
-        }, 150); //redrawing the modified cells
     }
-    function drawAll(){
+
+    function drawAll() {
         $(".board").html(""); //emptying the board
         for (var i = 0; i < cells.length; i++) {
             if (cells[i] != 0) {
@@ -85,7 +86,12 @@ $(document).ready(function () {
             }
         }
     }
-    function redraw() {
+
+    function redraw(idx) {
+        var xloc = (idx % 4) * 110; //calculating x pos
+        var yloc = Math.floor(idx / 4) * 110; //calculating y pos
+        $(".board").append("<div class='cell " + (idx+1) + " " + getcolorclass(cells[idx]) + "'>" + cells[idx] + "</div>"); //creating div
+        $(".cell." + (idx+1)).css("transform", "translate(" + xloc + "px," + yloc + "px)"); //positioning the div
         drawAll();
         $(".score").text(score);
         $(".topscore").text(topscore); //display score
@@ -117,15 +123,7 @@ $(document).ready(function () {
                         }
                         if (j >= i - 12 && empty > 0 && empty < 4) { //if any empty cell
                             //move upto num of empty cell
-                            cells[j - 1 + 4 * empty] = cells[j - 1];
-                            TweenMax.to(".cell." + j, 0.1, {
-                                css: {
-                                    marginTop: 110 * empty + "px"
-                                },
-                                ease: Power1.easeIn
-                            });
-                            $(".cell."+j).addClass(j+4*empty).removeClass(j);
-                            cells[j - 1] = 0;
+                            transit(j + 4 * empty, j);
                             moved = true; ////setting moved to true if movement happend
                         }
                         empty = 0;
@@ -151,15 +149,7 @@ $(document).ready(function () {
                             empty++;
                         }
                         if (j <= i + 12 && empty > 0 && empty < 4) {
-                            cells[j - 1 - 4 * empty] = cells[j - 1];
-                            TweenMax.to(".cell." + j, 0.1, {
-                                css: {
-                                    marginTop: -110 * empty + "px"
-                                },
-                                ease: Power1.easeIn
-                            });
-                            $(".cell."+j).addClass(j-4*empty).removeClass(j);
-                            cells[j - 1] = 0;
+                            transit(j - 4 * empty, j);
                             moved = true;
                         }
                         empty = 0;
@@ -185,15 +175,7 @@ $(document).ready(function () {
                             empty++;
                         }
                         if (j <= i + 3 && empty > 0 && empty < 4) {
-                            cells[j - 1 - empty] = cells[j - 1];
-                            TweenMax.to(".cell." + j, 0.1, {
-                                css: {
-                                    marginLeft: -110 * empty + "px"
-                                },
-                                ease: Power1.easeIn
-                            });
-                            $(".cell."+j).addClass(j-empty).removeClass(j);
-                            cells[j - 1] = 0;
+                            transit(j - empty, j);
                             moved = true;
                         }
                         empty = 0;
@@ -219,15 +201,7 @@ $(document).ready(function () {
                             empty++;
                         }
                         if (j >= i - 3 && empty > 0 && empty < 4) {
-                            cells[j - 1 + empty] = cells[j - 1];
-                            TweenMax.to(".cell." + j, 0.1, {
-                                css: {
-                                    marginLeft: 110 * empty + "px"
-                                },
-                                ease: Power1.easeIn
-                            });
-                            $(".cell."+j).addClass(j+empty).removeClass(j);
-                            cells[j - 1] = 0;
+                            transit(j + empty, j);
                             moved = true;
                         }
                         empty = 0;
@@ -248,68 +222,28 @@ $(document).ready(function () {
         if (ev == 40) { //combine down
             for (var i = start; i > start - 12; i -= 4) { //from start upwards
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i - 5]) { //if cell & upper cell are equal
-                    cells[i - 5] = 0; //emptying upper cell
-                    TweenMax.to(".cell."+(i-4),0.1,{css:{marginTop:110+"px",opacity:0.2},ease:Power1.easeIn});
-                    $(".cell."+i).removeClass(getcolorclass(cells[i-1]));
-                    cells[i - 1] *= 2; //doubling the original cell
-                    $(".cell."+i).addClass(getcolorclass(cells[i-1]));
-                    setTimeout(function(){$(".cell."+(i-4)).remove();},100);
-                    score += cells[i - 1];
-                    topscore = (score > topscore) ? score : topscore;
-                    if (cells[i - 1] == 2048) {
-                        won = true; //set won to true if 2048 is formed
-                    }
+                    transitNCombine(i-4,i);
                     return true; //return true on any merge
                 }
             }
         } else if (ev == 38) { //combine up in similar fasion
             for (var i = start; i < start + 12; i += 4) {
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i + 3]) {
-                    cells[i + 3] = 0;
-                    TweenMax.to(".cell."+(i+4),0.1,{css:{marginTop:-110+"px",opacity:0.2},ease:Power1.easeIn});
-                    $(".cell."+i).removeClass(getcolorclass(cells[i-1]));
-                    cells[i - 1] *= 2; //doubling the original cell
-                    $(".cell."+i).addClass(getcolorclass(cells[i-1]));
-                    setTimeout(function(){$(".cell."+(i+4)).remove();},100);
-                    score += cells[i - 1];
-                    topscore = (score > topscore) ? score : topscore;
-                    if (cells[i - 1] == 2048) {
-                        won = true;
-                    }
+                    transitNCombine(i+4,i);
                     return true;
                 }
             }
         } else if (ev == 37) { //combine left in similar fasion
             for (var i = start; i < start + 3; i++) {
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i]) {
-                    cells[i] = 0;
-                    TweenMax.to(".cell."+i+1,0.1,{css:{marginLeft:-110+"px",opacity:0.2},ease:Power1.easeIn});
-                    $(".cell."+i).removeClass(getcolorclass(cells[i-1]));
-                    cells[i - 1] *= 2; //doubling the original cell
-                    $(".cell."+i).addClass(getcolorclass(cells[i-1]));
-                    setTimeout(function(){$(".cell."+(i+1)).remove();},100);
-                    score += cells[i - 1];
-                    topscore = (score > topscore) ? score : topscore;
-                    if (cells[i - 1] == 2048) {
-                        won = true;
-                    }
+                    transitNCombine(i+1,i);
                     return true;
                 }
             }
         } else if (ev == 39) { //combine right in similar fasion
             for (var i = start; i > start - 3; i--) {
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i - 2]) {
-                    cells[i - 2] = 0;
-                    TweenMax.to(".cell."+(i-1),0.1,{css:{marginLeft:110+"px",opacity:0.2},ease:Power1.easeIn});
-                    $(".cell."+i).removeClass(getcolorclass(cells[i-1]));
-                    cells[i - 1] *= 2; //doubling the original cell
-                    $(".cell."+i).addClass(getcolorclass(cells[i-1]));
-                    setTimeout(function(){$(".cell."+(i-1)).remove();},100);
-                    score += cells[i - 1];
-                    topscore = (score > topscore) ? score : topscore;
-                    if (cells[i - 1] == 2048) {
-                        won = true;
-                    }
+                    transitNCombine(i-1,i);
                     return true;
                 }
             }
@@ -328,6 +262,45 @@ $(document).ready(function () {
             }
         }
         return true;
+    }
+
+    function transit(destIndex, sourceIndex) {
+        cells[destIndex - 1] = cells[sourceIndex - 1];
+        cells[sourceIndex - 1] = 0;
+        var xloc = ((destIndex - 1) % 4) * 110; //calculating x pos
+        var yloc = Math.floor((destIndex - 1) / 4) * 110; //calculating y pos
+        TweenMax.to(".cell." + sourceIndex, 0.1, {
+            css: {
+                transform: "translate(" + xloc + "px," + yloc + "px)"
+            },
+            ease: Power1.easeIn
+        });
+        $(".cell." + sourceIndex).addClass("" + destIndex).removeClass("" + sourceIndex);
+    }
+
+    function transitNCombine(sourceIndex, destIndex) {
+        cells[sourceIndex-1]=0;
+        var xloc = ((destIndex - 1) % 4) * 110; //calculating x pos
+        var yloc = Math.floor((destIndex - 1) / 4) * 110; //calculating y pos
+        TweenMax.to(".cell." + sourceIndex, 0.1, {
+            css: {
+                transform: "translate(" + xloc + "px," + yloc + "px)",
+                opacity: 0.2
+            },
+            ease: Power1.easeIn
+        });
+        $(".cell." + destIndex).removeClass(getcolorclass(cells[destIndex - 1]));
+        cells[destIndex - 1] *= 2; //doubling the original cell
+        $(".cell." + destIndex).addClass(getcolorclass(cells[destIndex - 1]));
+        setTimeout(function () {
+            $(".cell." + sourceIndex).remove();
+            $(".cell." + destIndex).text(cells[destIndex - 1]);
+        }, 100);
+        score += cells[destIndex - 1];
+        topscore = (score > topscore) ? score : topscore;
+        if (cells[destIndex - 1] == 2048) {
+            won = true; //set won to true if 2048 is formed
+        }
     }
     //function to check if there is no merge possible
     function noMatch() {
@@ -374,7 +347,7 @@ $(document).ready(function () {
     });
     //function to get colors & font class
     function getcolorclass(cell) {
-        var cclass="large";
+        var cclass = "large";
         if (cell == 2) {
             cclass = "two";
         } else if (cell == 4) {
@@ -404,6 +377,7 @@ $(document).ready(function () {
         }
         return cclass;
     }
+
     function restart() {
         cells = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; //if try again on game over setting all cells empty
         yloc = 0, xloc = 0;
