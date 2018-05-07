@@ -57,7 +57,23 @@
     z-index: 10;
     box-shadow: 0px 0px 10px -2px black;
 }
-
+h1{
+   display: flex;
+   flex-direction: row; 
+   margin: 5px;
+   height: 60px;
+}
+h1 .cell{
+    margin: 1px;
+    position: relative;
+    font-size: 35px;
+    height: 48px;
+    width: 60px;
+    padding-top: 6px;
+}
+h3{
+    margin: 5px;
+}
 .board {
     width: 450px;
     height: 450px;
@@ -74,14 +90,14 @@
 }
 
 .four {
-    background: radial-gradient(#FBB797,#FCC8A8);
+    background: radial-gradient(#FBB797,#FCC8B1);
     font-size: 50px;
     height: 85px;
     padding-top: 15px;
 }
 
 .eight {
-    background: #FB9797;
+    background: radial-gradient(#FB9797,#FBA7A7);
     font-size: 50px;
     color: black;
     height: 85px;
@@ -89,7 +105,7 @@
 }
 
 .sixteen {
-    background: #FB6957;
+    background: radial-gradient(#FB6957,#FB8767);
     color: #FBE9E7;
     font-size: 50px;
     height: 85px;
@@ -97,7 +113,7 @@
 }
 
 .thirtyTwo {
-    background: #FB2727;
+    background: radial-gradient(#FB2727,#FB4036);
     color: #FBE9E7;
     font-size: 50px;
     height: 85px;
@@ -105,7 +121,7 @@
 }
 
 .sixtyFour {
-    background: #aa1111;
+    background: radial-gradient(#aa1111,#ba3333);
     color: white;
     font-size: 50px;
     height: 85px;
@@ -113,14 +129,14 @@
 }
 
 .oneTwentyEight {
-    background: yellow;
+    background: radial-gradient(yellow,rgb(243, 243, 110));
     font-size: 40px;
     height: 75px;
     padding-top: 25px;
 }
 
 .twoFiveSix {
-    background: orange;
+    background: radial-gradient(orange,rgb(243, 187, 83));
     font-size: 40px;
     color: white;
     height: 75px;
@@ -128,7 +144,7 @@
 }
 
 .fiveOneTwo {
-    background: rgb(190, 106, 50);
+    background: radial-gradient(rgb(190, 106, 50),rgb(223, 137, 79));
     font-size: 40px;
     color: white;
     height: 75px;
@@ -136,14 +152,14 @@
 }
 
 .one024 {
-    background: rgb(175, 231, 19);
+    background: radial-gradient(rgb(175, 231, 19),rgb(193, 247, 45));
     font-size: 35px;
     height: 70px;
     padding-top: 30px;
 }
 
 .two048 {
-    background: green;
+    background: radial-gradient(green,rgb(11, 204, 11));
     font-size: 35px;
     color: #FBE9E7;
     height: 70px;
@@ -151,7 +167,7 @@
 }
 
 .four096 {
-    background: indigo;
+    background: radial-gradient(indigo,rgb(107, 8, 177));
     font-size: 35px;
     color: #FBE9E7;
     height: 70px;
@@ -159,7 +175,7 @@
 }
 
 .eight192 {
-    background: #4444cc;
+    background: radial-gradient(#4444cc,#4466ee);
     font-size: 35px;
     color: #FBE9E7;
     height: 70px;
@@ -167,7 +183,7 @@
 }
 
 .large {
-    background: #99AAE7;
+    background: radial-gradient(#99AAE7,#99CCF9);
 }
 
 .alertbox {
@@ -190,7 +206,7 @@
 .mode-toggle{
     border-radius: 10px;
     padding: 5px 20px;
-    font-size: 1.2rem;
+    font-size: 1em;
     background: grey;
     color: darkgray;
 }

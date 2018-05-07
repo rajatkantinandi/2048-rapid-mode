@@ -3,9 +3,14 @@ $(document).ready(function () {
     var cells = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var yloc = 0,
         xloc = 0;
+    // retrieving scores & game mode from local storage
     var score = (localStorage.getItem("score") == undefined) ? 0 : Math.round(localStorage.getItem("score"));
     var topscore = (localStorage.getItem("topscore") == undefined) ? 0 : Math.round(localStorage.getItem("topscore"));
-    var rapidmode = true;
+    var rapidmode = (localStorage.getItem("rapidmode") == undefined||localStorage.getItem("rapidmode")=="true") ?true:false;
+    if(rapidmode==false){
+        $("#normal-mode").addClass("btn-selected");        
+        $("#rapid-mode").removeClass("btn-selected");
+    }
     var won = false;
     //creating emptycells
     for (var i = 0; i < 16; i++) {
@@ -27,7 +32,9 @@ $(document).ready(function () {
         } else {
             cells = JSON.parse(localStorage.getItem('cells'));
         }
-        drawAll();
+        redrawAll();//drawing initial board with stored cells value or starting new game
+        $(".score").text(score);// display score
+        $(".topscore").text(topscore); //display top score
     }
 
     init(); //initialize
@@ -69,12 +76,12 @@ $(document).ready(function () {
                 cells[idx] = 4;
             } else cells[idx] = 2; //90% times create new cell with 2  
             setTimeout(function () {
-                redraw(idx);
-            }, 150); //redrawing the modified cells          
+                updateBoard(idx);
+            }, 150); //drawing new item & updating scores & storing values          
         }
     }
-
-    function drawAll() {
+    //function to redraw the whole board based on cells array
+    function redrawAll() {
         $(".board").html(""); //emptying the board
         for (var i = 0; i < cells.length; i++) {
             if (cells[i] != 0) {
@@ -86,15 +93,17 @@ $(document).ready(function () {
             }
         }
     }
-
-    function redraw(idx) {
+    // Function to update score, new item & store values after each move
+    function updateBoard(idx) {
+        // drawing new item
         var xloc = (idx % 4) * 110; //calculating x pos
         var yloc = Math.floor(idx / 4) * 110; //calculating y pos
         $(".board").append("<div class='cell " + (idx+1) + " " + getcolorclass(cells[idx]) + "'>" + cells[idx] + "</div>"); //creating div
         $(".cell." + (idx+1)).css("transform", "translate(" + xloc + "px," + yloc + "px)"); //positioning the div
-        drawAll();
+        // Updating scores
         $(".score").text(score);
         $(".topscore").text(topscore); //display score
+        //storing info
         localStorage.setItem("score", score);
         localStorage.setItem("topscore", topscore);
         localStorage.setItem('cells', JSON.stringify(cells));
@@ -115,7 +124,7 @@ $(document).ready(function () {
             for (var i = 13; i <= 16; i++) { //iterating over columns
                 var j = i;
                 var combined = false;
-
+                //function to go down
                 function godown() {
                     for (var l = i; l >= i - 12; l -= 4) { //iterating over cells in a column
                         for (j = l; j >= i - 12 && isEmpty(j); j -= 4) { //checking empty cells below each non empty cell
@@ -123,7 +132,7 @@ $(document).ready(function () {
                         }
                         if (j >= i - 12 && empty > 0 && empty < 4) { //if any empty cell
                             //move upto num of empty cell
-                            transit(j + 4 * empty, j);
+                            transit(j + 4 * empty, j);//transition
                             moved = true; ////setting moved to true if movement happend
                         }
                         empty = 0;
@@ -131,7 +140,7 @@ $(document).ready(function () {
                 }
                 do { //checking whether any cell have been merged then continue movement on that col
                     godown();
-                    combined = combine(ev, i); //checking for merge possibility & merfing
+                    combined = combine(ev, i); //checking for merge possibility & merging
                     if (combined) moved = true; //setting moved to true if combined
                 } while (combined & rapidmode);
                 godown();
@@ -142,14 +151,14 @@ $(document).ready(function () {
             for (var i = 1; i <= 4; i++) {
                 var j;
                 var combined = false;
-
+                //function to go up
                 function goup() {
                     for (var l = i; l <= i + 12; l += 4) {
                         for (j = l; j <= i + 12 && isEmpty(j); j += 4) {
                             empty++;
                         }
                         if (j <= i + 12 && empty > 0 && empty < 4) {
-                            transit(j - 4 * empty, j);
+                            transit(j - 4 * empty, j);//transition
                             moved = true;
                         }
                         empty = 0;
@@ -168,14 +177,14 @@ $(document).ready(function () {
             for (var i = 1; i <= 13; i += 4) {
                 var j;
                 var combined = false;
-
+                //function to go left
                 function goleft() {
                     for (var l = i; l <= i + 3; l++) {
                         for (j = l; j <= i + 3 && isEmpty(j); j++) {
                             empty++;
                         }
                         if (j <= i + 3 && empty > 0 && empty < 4) {
-                            transit(j - empty, j);
+                            transit(j - empty, j);//transition
                             moved = true;
                         }
                         empty = 0;
@@ -194,14 +203,14 @@ $(document).ready(function () {
             for (var i = 4; i <= 16; i += 4) {
                 var j;
                 var combined = false;
-
+                //function to go right
                 function goright() {
                     for (var l = i; l >= i - 3; l--) {
                         for (j = l; j >= i - 3 && isEmpty(j); j--) {
                             empty++;
                         }
                         if (j >= i - 3 && empty > 0 && empty < 4) {
-                            transit(j + empty, j);
+                            transit(j + empty, j);//transition
                             moved = true;
                         }
                         empty = 0;
@@ -222,28 +231,28 @@ $(document).ready(function () {
         if (ev == 40) { //combine down
             for (var i = start; i > start - 12; i -= 4) { //from start upwards
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i - 5]) { //if cell & upper cell are equal
-                    transitNCombine(i-4,i);
+                    transitNCombine(i-4,i);//combine 2 cells
                     return true; //return true on any merge
                 }
             }
         } else if (ev == 38) { //combine up in similar fasion
             for (var i = start; i < start + 12; i += 4) {
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i + 3]) {
-                    transitNCombine(i+4,i);
+                    transitNCombine(i+4,i);//combine 2 cells
                     return true;
                 }
             }
         } else if (ev == 37) { //combine left in similar fasion
             for (var i = start; i < start + 3; i++) {
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i]) {
-                    transitNCombine(i+1,i);
+                    transitNCombine(i+1,i);//combine 2 cells
                     return true;
                 }
             }
         } else if (ev == 39) { //combine right in similar fasion
             for (var i = start; i > start - 3; i--) {
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i - 2]) {
-                    transitNCombine(i-1,i);
+                    transitNCombine(i-1,i);//combine 2 cells
                     return true;
                 }
             }
@@ -263,7 +272,7 @@ $(document).ready(function () {
         }
         return true;
     }
-
+    // Function to transit one cell from sourceIndex to destinationIndex 
     function transit(destIndex, sourceIndex) {
         cells[destIndex - 1] = cells[sourceIndex - 1];
         cells[sourceIndex - 1] = 0;
@@ -277,7 +286,7 @@ $(document).ready(function () {
         });
         $(".cell." + sourceIndex).addClass("" + destIndex).removeClass("" + sourceIndex);
     }
-
+    // Function to combine two cells of sourceIndex and destinationIndex respectively
     function transitNCombine(sourceIndex, destIndex) {
         cells[sourceIndex-1]=0;
         var xloc = ((destIndex - 1) % 4) * 110; //calculating x pos
@@ -292,8 +301,8 @@ $(document).ready(function () {
         $(".cell." + destIndex).removeClass(getcolorclass(cells[destIndex - 1]));
         cells[destIndex - 1] *= 2; //doubling the original cell
         $(".cell." + destIndex).addClass(getcolorclass(cells[destIndex - 1]));
+        $(".cell." + sourceIndex).remove();
         setTimeout(function () {
-            $(".cell." + sourceIndex).remove();
             $(".cell." + destIndex).text(cells[destIndex - 1]);
         }, 100);
         score += cells[destIndex - 1];
@@ -311,7 +320,6 @@ $(document).ready(function () {
         }
         return true;
     }
-
     //function to show alert on win or game over
     function showalert(message, btntxt) {
         $(".message").html(message);
@@ -332,6 +340,7 @@ $(document).ready(function () {
             restart();
         }
     });
+    //Function for mode toggle
     $(".mode-toggle").click(function () {
         $(this).addClass("btn-selected");
         if ($(this).attr("id") == "normal-mode") {
@@ -341,6 +350,7 @@ $(document).ready(function () {
             rapidmode = true;
             $("#normal-mode").removeClass("btn-selected");
         }
+        localStorage.setItem("rapidmode",JSON.stringify(rapidmode));
     });
     $("#newgame").click(function () {
         restart();
