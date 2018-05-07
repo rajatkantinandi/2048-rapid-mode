@@ -6,9 +6,9 @@ $(document).ready(function () {
     // retrieving scores & game mode from local storage
     var score = (localStorage.getItem("score") == undefined) ? 0 : Math.round(localStorage.getItem("score"));
     var topscore = (localStorage.getItem("topscore") == undefined) ? 0 : Math.round(localStorage.getItem("topscore"));
-    var rapidmode = (localStorage.getItem("rapidmode") == undefined||localStorage.getItem("rapidmode")=="true") ?true:false;
-    if(rapidmode==false){
-        $("#normal-mode").addClass("btn-selected");        
+    var rapidmode = (localStorage.getItem("rapidmode") == undefined || localStorage.getItem("rapidmode") == "true") ? true : false;
+    if (rapidmode == false) {
+        $("#normal-mode").addClass("btn-selected");
         $("#rapid-mode").removeClass("btn-selected");
     }
     var won = false;
@@ -32,8 +32,8 @@ $(document).ready(function () {
         } else {
             cells = JSON.parse(localStorage.getItem('cells'));
         }
-        redrawAll();//drawing initial board with stored cells value or starting new game
-        $(".score").text(score);// display score
+        redrawAll(); //drawing initial board with stored cells value or starting new game
+        $(".score").text(score); // display score
         $(".topscore").text(topscore); //display top score
     }
 
@@ -98,8 +98,8 @@ $(document).ready(function () {
         // drawing new item
         var xloc = (idx % 4) * 110; //calculating x pos
         var yloc = Math.floor(idx / 4) * 110; //calculating y pos
-        $(".board").append("<div class='cell " + (idx+1) + " " + getcolorclass(cells[idx]) + "'>" + cells[idx] + "</div>"); //creating div
-        $(".cell." + (idx+1)).css("transform", "translate(" + xloc + "px," + yloc + "px)"); //positioning the div
+        $(".board").append("<div class='cell " + (idx + 1) + " " + getcolorclass(cells[idx]) + "'>" + cells[idx] + "</div>"); //creating div
+        $(".cell." + (idx + 1)).css("transform", "translate(" + xloc + "px," + yloc + "px)"); //positioning the div
         // Updating scores
         $(".score").text(score);
         $(".topscore").text(topscore); //display score
@@ -132,7 +132,7 @@ $(document).ready(function () {
                         }
                         if (j >= i - 12 && empty > 0 && empty < 4) { //if any empty cell
                             //move upto num of empty cell
-                            transit(j + 4 * empty, j);//transition
+                            transit(j + 4 * empty, j); //transition
                             moved = true; ////setting moved to true if movement happend
                         }
                         empty = 0;
@@ -158,7 +158,7 @@ $(document).ready(function () {
                             empty++;
                         }
                         if (j <= i + 12 && empty > 0 && empty < 4) {
-                            transit(j - 4 * empty, j);//transition
+                            transit(j - 4 * empty, j); //transition
                             moved = true;
                         }
                         empty = 0;
@@ -184,7 +184,7 @@ $(document).ready(function () {
                             empty++;
                         }
                         if (j <= i + 3 && empty > 0 && empty < 4) {
-                            transit(j - empty, j);//transition
+                            transit(j - empty, j); //transition
                             moved = true;
                         }
                         empty = 0;
@@ -210,7 +210,7 @@ $(document).ready(function () {
                             empty++;
                         }
                         if (j >= i - 3 && empty > 0 && empty < 4) {
-                            transit(j + empty, j);//transition
+                            transit(j + empty, j); //transition
                             moved = true;
                         }
                         empty = 0;
@@ -231,28 +231,28 @@ $(document).ready(function () {
         if (ev == 40) { //combine down
             for (var i = start; i > start - 12; i -= 4) { //from start upwards
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i - 5]) { //if cell & upper cell are equal
-                    transitNCombine(i-4,i);//combine 2 cells
+                    transitNCombine(i - 4, i); //combine 2 cells
                     return true; //return true on any merge
                 }
             }
         } else if (ev == 38) { //combine up in similar fasion
             for (var i = start; i < start + 12; i += 4) {
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i + 3]) {
-                    transitNCombine(i+4,i);//combine 2 cells
+                    transitNCombine(i + 4, i); //combine 2 cells
                     return true;
                 }
             }
         } else if (ev == 37) { //combine left in similar fasion
             for (var i = start; i < start + 3; i++) {
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i]) {
-                    transitNCombine(i+1,i);//combine 2 cells
+                    transitNCombine(i + 1, i); //combine 2 cells
                     return true;
                 }
             }
         } else if (ev == 39) { //combine right in similar fasion
             for (var i = start; i > start - 3; i--) {
                 if (cells[i - 1] != 0 && cells[i - 1] == cells[i - 2]) {
-                    transitNCombine(i-1,i);//combine 2 cells
+                    transitNCombine(i - 1, i); //combine 2 cells
                     return true;
                 }
             }
@@ -288,7 +288,7 @@ $(document).ready(function () {
     }
     // Function to combine two cells of sourceIndex and destinationIndex respectively
     function transitNCombine(sourceIndex, destIndex) {
-        cells[sourceIndex-1]=0;
+        cells[sourceIndex - 1] = 0;
         var xloc = ((destIndex - 1) % 4) * 110; //calculating x pos
         var yloc = Math.floor((destIndex - 1) / 4) * 110; //calculating y pos
         TweenMax.to(".cell." + sourceIndex, 0.1, {
@@ -350,7 +350,7 @@ $(document).ready(function () {
             rapidmode = true;
             $("#normal-mode").removeClass("btn-selected");
         }
-        localStorage.setItem("rapidmode",JSON.stringify(rapidmode));
+        localStorage.setItem("rapidmode", JSON.stringify(rapidmode));
     });
     $("#newgame").click(function () {
         restart();

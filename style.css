@@ -57,13 +57,15 @@
     z-index: 10;
     box-shadow: 0px 0px 10px -2px black;
 }
-h1{
-   display: flex;
-   flex-direction: row; 
-   margin: 5px;
-   height: 60px;
+
+h1 {
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+    height: 60px;
 }
-h1 .cell{
+
+h1 .cell {
     margin: 1px;
     position: relative;
     font-size: 35px;
@@ -71,9 +73,11 @@ h1 .cell{
     width: 60px;
     padding-top: 6px;
 }
-h3{
+
+h3 {
     margin: 5px;
 }
+
 .board {
     width: 450px;
     height: 450px;
@@ -83,21 +87,21 @@ h3{
 }
 
 .two {
-    background: radial-gradient(#FBD7D7,#FCF8F8);
+    background: radial-gradient(#FBD7D7, #FCF8F8);
     font-size: 50px;
     height: 85px;
     padding-top: 15px;
 }
 
 .four {
-    background: radial-gradient(#FBB797,#FCC8B1);
+    background: radial-gradient(#FBB797, #FCC8B1);
     font-size: 50px;
     height: 85px;
     padding-top: 15px;
 }
 
 .eight {
-    background: radial-gradient(#FB9797,#FBA7A7);
+    background: radial-gradient(#FB9797, #FBA7A7);
     font-size: 50px;
     color: black;
     height: 85px;
@@ -105,7 +109,7 @@ h3{
 }
 
 .sixteen {
-    background: radial-gradient(#FB6957,#FB8767);
+    background: radial-gradient(#FB6957, #FB8767);
     color: #FBE9E7;
     font-size: 50px;
     height: 85px;
@@ -113,7 +117,7 @@ h3{
 }
 
 .thirtyTwo {
-    background: radial-gradient(#FB2727,#FB4036);
+    background: radial-gradient(#FB2727, #FB4036);
     color: #FBE9E7;
     font-size: 50px;
     height: 85px;
@@ -121,7 +125,7 @@ h3{
 }
 
 .sixtyFour {
-    background: radial-gradient(#aa1111,#ba3333);
+    background: radial-gradient(#aa1111, #ba3333);
     color: white;
     font-size: 50px;
     height: 85px;
@@ -129,14 +133,14 @@ h3{
 }
 
 .oneTwentyEight {
-    background: radial-gradient(yellow,rgb(243, 243, 110));
+    background: radial-gradient(yellow, rgb(243, 243, 110));
     font-size: 40px;
     height: 75px;
     padding-top: 25px;
 }
 
 .twoFiveSix {
-    background: radial-gradient(orange,rgb(243, 187, 83));
+    background: radial-gradient(orange, rgb(243, 187, 83));
     font-size: 40px;
     color: white;
     height: 75px;
@@ -144,7 +148,7 @@ h3{
 }
 
 .fiveOneTwo {
-    background: radial-gradient(rgb(190, 106, 50),rgb(223, 137, 79));
+    background: radial-gradient(rgb(190, 106, 50), rgb(223, 137, 79));
     font-size: 40px;
     color: white;
     height: 75px;
@@ -152,14 +156,14 @@ h3{
 }
 
 .one024 {
-    background: radial-gradient(rgb(175, 231, 19),rgb(193, 247, 45));
+    background: radial-gradient(rgb(175, 231, 19), rgb(193, 247, 45));
     font-size: 35px;
     height: 70px;
     padding-top: 30px;
 }
 
 .two048 {
-    background: radial-gradient(green,rgb(11, 204, 11));
+    background: radial-gradient(green, rgb(11, 204, 11));
     font-size: 35px;
     color: #FBE9E7;
     height: 70px;
@@ -167,7 +171,7 @@ h3{
 }
 
 .four096 {
-    background: radial-gradient(indigo,rgb(107, 8, 177));
+    background: radial-gradient(indigo, rgb(107, 8, 177));
     font-size: 35px;
     color: #FBE9E7;
     height: 70px;
@@ -175,7 +179,7 @@ h3{
 }
 
 .eight192 {
-    background: radial-gradient(#4444cc,#4466ee);
+    background: radial-gradient(#4444cc, #4466ee);
     font-size: 35px;
     color: #FBE9E7;
     height: 70px;
@@ -183,11 +187,11 @@ h3{
 }
 
 .large {
-    background: radial-gradient(#99AAE7,#99CCF9);
+    background: radial-gradient(#99AAE7, #99CCF9);
 }
 
 .alertbox {
-    background: rgba(20,20,90,0.8);
+    background: rgba(20, 20, 90, 0.8);
     color: white;
     width: 100%;
     height: 100%;
@@ -203,23 +207,25 @@ h3{
     font-size: 35px;
     text-align: center;
 }
-.mode-toggle{
+
+.mode-toggle {
     border-radius: 10px;
     padding: 5px 20px;
     font-size: 1em;
     background: grey;
     color: darkgray;
 }
-.btn-selected{
+
+.btn-selected {
     background: #4444cc;
     color: white;
 }
+
 @keyframes showing {
     0% {
         visibility: visible;
         transform: scale(0.2);
     }
-
     100% {
         visibility: visible;
         transform: scale(1);
@@ -233,7 +239,7 @@ h3{
 
 .message {
     margin-bottom: 20px;
-    visibility:hidden;
+    visibility: hidden;
 }
 
 .continue {
@@ -244,21 +250,22 @@ h3{
     font-size: 18px;
     background: rgb(218, 48, 36);
 }
-#continue{
-    visibility:hidden;
+
+#continue {
+    visibility: hidden;
 }
-    .continue:hover {
-        border: 1px solid red;
-        background: #aabbcc;
-        color: indigo;
-    }
+
+.continue:hover {
+    border: 1px solid red;
+    background: #aabbcc;
+    color: indigo;
+}
 
 @media (max-width:500px) {
     .game {
         transform: scale(0.85);
         margin-top: -50px;
     }
-
     h1 {
         margin-bottom: 10px;
         font-size: 26px;
@@ -270,7 +277,6 @@ h3{
         transform: scale(0.7);
         margin-top: -70px;
     }
-
     h1 {
         margin-bottom: 10px;
         font-size: 24px;
@@ -282,7 +288,6 @@ h3{
         transform: scale(0.6);
         margin-top: -100px;
     }
-
     h1 {
         margin-bottom: 10px;
         font-size: 20px;
