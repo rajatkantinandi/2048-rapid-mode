@@ -278,11 +278,11 @@ $(document).ready(function () {
         cells[sourceIndex - 1] = 0;
         var xloc = ((destIndex - 1) % 4) * 110; //calculating x pos
         var yloc = Math.floor((destIndex - 1) / 4) * 110; //calculating y pos
-        TweenMax.to(".cell." + sourceIndex, 0.1, {
+        TweenMax.to(".cell." + sourceIndex, 0.15, {
             css: {
                 transform: "translate(" + xloc + "px," + yloc + "px)"
             },
-            ease: Power1.easeIn
+            ease: Power1.easeOut
         });
         $(".cell." + sourceIndex).addClass("" + destIndex).removeClass("" + sourceIndex);
     }
@@ -291,20 +291,21 @@ $(document).ready(function () {
         cells[sourceIndex - 1] = 0;
         var xloc = ((destIndex - 1) % 4) * 110; //calculating x pos
         var yloc = Math.floor((destIndex - 1) / 4) * 110; //calculating y pos
-        TweenMax.to(".cell." + sourceIndex, 0.1, {
+        TweenMax.to(".cell." + sourceIndex, 0.15, {
             css: {
                 transform: "translate(" + xloc + "px," + yloc + "px)",
                 opacity: 0.2
             },
-            ease: Power1.easeIn
+            ease: Power1.easeOut
         });
         $(".cell." + destIndex).removeClass(getcolorclass(cells[destIndex - 1]));
         cells[destIndex - 1] *= 2; //doubling the original cell
         $(".cell." + destIndex).addClass(getcolorclass(cells[destIndex - 1]));
-        $(".cell." + sourceIndex).remove();
+        $(".cell." + sourceIndex).addClass("removable");
         setTimeout(function () {
             $(".cell." + destIndex).text(cells[destIndex - 1]);
-        }, 100);
+            $(".cell.removable").remove();
+        }, 150);
         score += cells[destIndex - 1];
         topscore = (score > topscore) ? score : topscore;
         if (cells[destIndex - 1] == 2048) {
