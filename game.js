@@ -63,20 +63,8 @@ $(document).ready(function () {
     //Action function on keypress & swipe event
     function act(ev) {
         if (shift(ev)) { //check if any shift or movement happend in a direction or any cells merged
-            //getting indices of zero values or empty cells of cells array into idx & selecting any random value
-            var zeros = [];
-            var idx = cells.indexOf(0);
-            while (idx != -1) {
-                zeros.push(idx);
-                idx = cells.indexOf(0, idx + 1);
-            }
-            idx = zeros[Math.floor(Math.random() * zeros.length)];
-            var chanceOf4 = Math.random(); //chance of appearing four
-            if (chanceOf4 < 0.1) { //10% times create 4
-                cells[idx] = 4;
-            } else cells[idx] = 2; //90% times create new cell with 2  
             setTimeout(function () {
-                updateBoard(idx);
+                updateBoard();
             }, 150); //drawing new item & updating scores & storing values          
         }
     }
@@ -94,7 +82,19 @@ $(document).ready(function () {
         }
     }
     // Function to update score, new item & store values after each move
-    function updateBoard(idx) {
+    function updateBoard() {
+            //getting indices of zero values or empty cells of cells array into idx & selecting any random value
+        var zeros = [];
+        var idx = cells.indexOf(0);
+        while (idx != -1) {
+            zeros.push(idx);
+            idx = cells.indexOf(0, idx + 1);
+        }
+        idx = zeros[Math.floor(Math.random() * zeros.length)];
+        var chanceOf4 = Math.random(); //chance of appearing four
+        if (chanceOf4 < 0.1) { //10% times create 4
+            cells[idx] = 4;
+        } else cells[idx] = 2; //90% times create new cell with 2  
         // drawing new item
         var xloc = (idx % 4) * 110; //calculating x pos
         var yloc = Math.floor(idx / 4) * 110; //calculating y pos
