@@ -3,29 +3,56 @@
   import Cell from "./Cell.svelte";
   import NewGameBtn from "./NewGame.svelte";
   import AlertBox from "./AlertBox.svelte";
-  import { moveCells } from "./helpers/cell";
+  import { moveCells, directions } from "./helpers/cell";
 
   let cells = JSON.parse(localStorage.getItem("cells")) || initCells(4);
   let isGameOver = false;
   let didPlayerWin = false;
+  let score = parseInt(localStorage.getItem("score")) || 0;
+  let topScore = parseInt(localStorage.getItem("top-score")) || 0;
 
   const restart = () => {
     cells = initCells(4);
     isGameOver = false;
+    handleScoreUpdate(-score);
+    document.body.focus();
   };
 
   function action(ev) {
     if (ev.altKey && ev.which === 78) {
       restart();
-    } else {
-      const freshCells = createNewCell(moveCells(ev.key, cells));
+    } else if (Object.values(directions).indexOf(ev.key) >= 0) {
+      const moveCellsData = moveCells(ev.key, cells);
+      const freshCells = createNewCell(moveCellsData.cells);
 
-      if (freshCells) cells = freshCells;
+      if (moveCellsData.didPlayerWin) didPlayerWin = true;
+
+      handleScoreUpdate(moveCellsData.scoreUpdate);
+
+      if (freshCells) updateCells(freshCells);
       else isGameOver = true;
     }
   }
 
-  const continueGame = () => (didPlayerWin = false);
+  function handleScoreUpdate(scoreUpdate) {
+    score += scoreUpdate;
+    localStorage.setItem("score", score);
+
+    if (score > topScore) {
+      topScore = score;
+      localStorage.setItem("top-score", score);
+    }
+  }
+
+  function updateCells(freshCells) {
+    cells = freshCells;
+    localStorage.setItem("cells", JSON.stringify(freshCells));
+  }
+
+  const continueGame = () => {
+    didPlayerWin = false;
+    document.body.focus();
+  }
 </script>
 
 <style>
@@ -139,7 +166,7 @@
   }
 </style>
 
-<main on:keydown={action} tabindex="0" autofocus>
+<body on:keydown={action} tabindex="0" autofocus>
   <div class="game">
     <h1>
       <Cell value="2" small />
@@ -149,17 +176,17 @@
     </h1>
     <h3>
       Mode:
-      <button class="btn-selected mode-toggle" id="rapid-mode">Rapid</button>
-      <button class="mode-toggle" id="normal-mode">Normal</button>
+      <button class="mode-toggle" id="rapid-mode">Rapid</button>
+      <button class="btn-selected mode-toggle" id="normal-mode">Normal</button>
     </h3>
     <div class="scoring">
       <div class="scoreboard">
         Score
-        <div class="score">0</div>
+        <div class="score">{score}</div>
       </div>
       <div class="scoreboard">
         Top Score
-        <div class="score">0</div>
+        <div class="score">{topScore}</div>
       </div>
       <NewGameBtn onClick={restart} />
     </div>
@@ -181,4 +208,4 @@
       okAction={continueGame}
       okText="Continue" />
   {/if}
-</main>
+</body>

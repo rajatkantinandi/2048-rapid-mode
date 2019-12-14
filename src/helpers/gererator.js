@@ -1,4 +1,6 @@
 //function to generate random integer in a range
+import { canMergeAnyCells } from './cell';
+
 export function randInt(from, to) {
   return Math.floor(Math.random() * (to - from)) + from;
 }
@@ -53,11 +55,14 @@ const getEmptyIndices = (cells) => {
 export function createNewCell(cells) {
   const emptyIndices = getEmptyIndices(cells);
 
-  if (emptyIndices.length === 0) return null;
+  if (emptyIndices.length > 0) {
+    const val = Math.random < 0.1 ? 4 : 2;
+    const newCellIdx = emptyIndices[randInt(0, emptyIndices.length - 1)];
 
-  const val = Math.random < 0.1 ? 4 : 2;
-  const newCellIdx = emptyIndices[randInt(0, emptyIndices.length - 1)];
-
-  cells[newCellIdx.i][newCellIdx.j] = val;
-  return cells;
+    cells[newCellIdx.i][newCellIdx.j] = val;
+    return cells;
+  }
+  else if (canMergeAnyCells(cells)) {
+    return cells;
+  }
 }
