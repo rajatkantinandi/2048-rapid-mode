@@ -1,0 +1,45 @@
+<script>
+  import NewGame from "./NewGame.svelte";
+
+  export let message;
+  export let okAction;
+  export let okText = "Play Again";
+</script>
+
+<style>
+  .alertbox {
+    background: linear-gradient(45deg, #133, rgba(0, 0, 0, 0.4), #133),
+      linear-gradient(-45deg, #133, rgba(0, 0, 0, 0.4), #133);
+    color: white;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    font-size: 35px;
+    text-align: center;
+    animation: appear 0.5s ease-out;
+  }
+
+  @keyframes appear {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .message {
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="alertbox">
+  <div class="message">{message}</div>
+  <NewGame text={okText} onClick={okAction} />
+</div>
