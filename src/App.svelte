@@ -5,6 +5,7 @@
   import NewGameBtn from "./NewGame.svelte";
   import AlertBox from "./AlertBox.svelte";
   import GameModeSwitch from "./GameModeSwitch.svelte";
+  import ScoreBoard from './ScoreBoard.svelte';
 
   let cells = JSON.parse(localStorage.getItem("cells")) || initCells(4);
   let isGameOver = checkGameOver(cells);
@@ -89,25 +90,6 @@
     align-items: center;
     justify-content: center;
   }
-
-  .score {
-    font-family: "Audiowide", monospace;
-    font-size: 1.2em;
-    color: honeydew;
-  }
-
-  .scoreboard {
-    color: white;
-    border-radius: 10px;
-    text-align: center;
-    margin-right: 10px;
-    background: linear-gradient(to bottom, #131 30%, #011101 50%);
-    height: 50px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding: 0 15px;
-  }
   h1 {
     display: flex;
     flex-direction: row;
@@ -177,14 +159,8 @@
     </h1>
     <GameModeSwitch {gameMode} {setGameMode} />
     <div class="scoring">
-      <div class="scoreboard">
-        Score
-        <div class="score">{score}</div>
-      </div>
-      <div class="scoreboard">
-        Top Score
-        <div class="score">{topScore}</div>
-      </div>
+      <ScoreBoard {score}/>
+      <ScoreBoard {topScore}/>
       <NewGameBtn onClick={restart} />
     </div>
     <hr />
