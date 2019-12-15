@@ -1,11 +1,12 @@
 <script>
   import { initCells, createNewCell } from "./helpers/gererator";
   import { moveCells, directions, checkGameOver } from "./helpers/cell";
+  import SwipeHelper from "./helpers/swipeHelper";
   import Cell from "./Cell.svelte";
   import NewGameBtn from "./NewGame.svelte";
   import AlertBox from "./AlertBox.svelte";
   import GameModeSwitch from "./GameModeSwitch.svelte";
-  import ScoreBoard from './ScoreBoard.svelte';
+  import ScoreBoard from "./ScoreBoard.svelte";
 
   let cells = JSON.parse(localStorage.getItem("cells")) || initCells(4);
   let isGameOver = checkGameOver(cells);
@@ -13,6 +14,7 @@
   let score = parseInt(localStorage.getItem("score")) || 0;
   let topScore = parseInt(localStorage.getItem("top-score")) || 0;
   let gameMode = localStorage.getItem("gameMode") || "Rapid";
+  let swipeHelper = new SwipeHelper();
 
   const restart = () => {
     cells = initCells(4);
@@ -21,23 +23,27 @@
     document.body.focus();
   };
 
-  function action(ev) {
+  function handleKeyDown(ev) {
     if (ev.altKey && ev.which === 78) {
       restart();
     } else if (Object.values(directions).indexOf(ev.key) >= 0) {
-      const moveCellsData = moveCells(ev.key, cells, gameMode);
-      const freshCells = moveCellsData.didMoveOrMerge
-        ? createNewCell(moveCellsData.cells)
-        : null;
-
-      if (freshCells) {
-        updateCells(freshCells);
-        handleScoreUpdate(moveCellsData.scoreUpdate);
-        if (moveCellsData.didPlayerWin) didPlayerWin = true;
-      }
-
-      if (checkGameOver(cells)) isGameOver = true;
+      play(ev.key);
     }
+  }
+
+  function play(direction) {
+    const moveCellsData = moveCells(direction, cells, gameMode);
+    const freshCells = moveCellsData.didMoveOrMerge
+      ? createNewCell(moveCellsData.cells)
+      : null;
+
+    if (freshCells) {
+      updateCells(freshCells);
+      handleScoreUpdate(moveCellsData.scoreUpdate);
+      if (moveCellsData.didPlayerWin) didPlayerWin = true;
+    }
+
+    if (checkGameOver(cells)) isGameOver = true;
   }
 
   function handleScoreUpdate(scoreUpdate) {
@@ -64,6 +70,11 @@
     gameMode = mode;
     localStorage.setItem("gameMode", mode);
   };
+
+  function handleTouchEnd(ev) {
+    const direction = swipeHelper.handleTouchEnd(ev);
+    play(direction);
+  }
 </script>
 
 <style>
@@ -149,7 +160,7 @@
   }
 </style>
 
-<body on:keydown={action} tabindex="0" autofocus>
+<body on:keydown={handleKeyDown} tabindex="0" autofocus>
   <div class="game">
     <h1>
       <Cell value="2" small />
@@ -159,12 +170,15 @@
     </h1>
     <GameModeSwitch {gameMode} {setGameMode} />
     <div class="scoring">
-      <ScoreBoard {score}/>
-      <ScoreBoard {topScore}/>
+      <ScoreBoard {score} />
+      <ScoreBoard {topScore} />
       <NewGameBtn onClick={restart} />
     </div>
     <hr />
-    <div class="board">
+    <div
+      class="board"
+      on:touchstart={ev => swipeHelper.handleTouchStart(ev)}
+      on:touchend={handleTouchEnd}>
       {#each cells as row}
         {#each row as cell}
           <Cell value={cell} />
