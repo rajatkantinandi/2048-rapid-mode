@@ -1,15 +1,17 @@
 <script>
   import { initCells, createNewCell } from "./helpers/gererator";
+  import { moveCells, directions, checkGameOver } from "./helpers/cell";
   import Cell from "./Cell.svelte";
   import NewGameBtn from "./NewGame.svelte";
   import AlertBox from "./AlertBox.svelte";
-  import { moveCells, directions, checkGameOver } from "./helpers/cell";
+  import GameModeSwitch from "./GameModeSwitch.svelte";
 
   let cells = JSON.parse(localStorage.getItem("cells")) || initCells(4);
   let isGameOver = checkGameOver(cells);
   let didPlayerWin = false;
   let score = parseInt(localStorage.getItem("score")) || 0;
   let topScore = parseInt(localStorage.getItem("top-score")) || 0;
+  let gameMode = localStorage.getItem("gameMode") || "Rapid";
 
   const restart = () => {
     cells = initCells(4);
@@ -22,7 +24,7 @@
     if (ev.altKey && ev.which === 78) {
       restart();
     } else if (Object.values(directions).indexOf(ev.key) >= 0) {
-      const moveCellsData = moveCells(ev.key, cells);
+      const moveCellsData = moveCells(ev.key, cells, gameMode);
       const freshCells = moveCellsData.didMoveOrMerge
         ? createNewCell(moveCellsData.cells)
         : null;
@@ -56,13 +58,18 @@
     didPlayerWin = false;
     document.body.focus();
   };
+
+  const setGameMode = mode => {
+    gameMode = mode;
+    localStorage.setItem("gameMode", mode);
+  };
 </script>
 
 <style>
-  @import url('https://fonts.googleapis.com/css?family=Audiowide|Comfortaa|Pacifico&display=swap');
+  @import url("https://fonts.googleapis.com/css?family=Audiowide|Comfortaa|Pacifico&display=swap");
 
   body {
-    font-family: 'Comfortaa', sans-serif;
+    font-family: "Comfortaa", sans-serif;
   }
 
   button {
@@ -129,19 +136,6 @@
     grid-template-rows: repeat(4, 1fr);
   }
 
-  .mode-toggle {
-    border-radius: 10px;
-    padding: 5px 20px;
-    font-size: 1em;
-    background: grey;
-    color: darkgray;
-  }
-
-  .btn-selected {
-    background: #4444cc;
-    color: white;
-  }
-
   @media (max-width: 500px) {
     .game {
       transform: scale(0.85);
@@ -181,11 +175,7 @@
       <Cell value="4" small />
       <Cell value="8" small />
     </h1>
-    <h3>
-      Mode:
-      <button class="mode-toggle" id="rapid-mode">Rapid</button>
-      <button class="btn-selected mode-toggle" id="normal-mode">Normal</button>
-    </h3>
+    <GameModeSwitch {gameMode} {setGameMode} />
     <div class="scoring">
       <div class="scoreboard">
         Score

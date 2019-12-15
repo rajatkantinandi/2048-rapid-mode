@@ -1,4 +1,4 @@
-let scoreUpdate = 0, didPlayerWin = false, didMoveOrMerge = false;
+let scoreUpdate = 0, didPlayerWin = false, didMoveOrMerge = false, didMoveOrMergeInLoop = false;
 
 export const directions = {
   RIGHT: 'ArrowRight',
@@ -28,15 +28,35 @@ export function moveCell(direction, cells, x, y) {
 
   cells[x][y] = val;
 
-  if (initX !== x || initY !== y) didMoveOrMerge = true;
+  if (initX !== x || initY !== y) {
+    didMoveOrMerge = true;
+    didMoveOrMergeInLoop = true;
+  }
 }
 
-export function moveCells(direction, cells) {
+export function moveCells(direction, cells, mode) {
   scoreUpdate = 0, didPlayerWin = false, didMoveOrMerge = false;
+  if (mode === 'Normal') {
+    movementNormalMode(direction, cells);
+  }
+  else if (mode === 'Rapid') {
+    movementRapidMode(direction, cells);
+  }
+  return { cells, scoreUpdate, didPlayerWin, didMoveOrMerge };
+}
+
+const movementNormalMode = (direction, cells) => {
   traverseAndActOnCells(direction, cells, moveCell);
   traverseAndActOnCells(direction, cells, mergeCells);
   traverseAndActOnCells(direction, cells, moveCell);
-  return { cells, scoreUpdate, didPlayerWin, didMoveOrMerge };
+}
+
+const movementRapidMode = (direction, cells) => {
+  do {
+    didMoveOrMergeInLoop = false;
+    traverseAndActOnCells(direction, cells, mergeCells);
+    traverseAndActOnCells(direction, cells, moveCell);
+  } while (didMoveOrMergeInLoop);
 }
 
 export function traverseAndActOnCells(direction, cells, callback) {
@@ -44,7 +64,7 @@ export function traverseAndActOnCells(direction, cells, callback) {
 
   if (direction === directions.DOWN) {
     for (let i = 0; i < dim; i++) {
-      for (let j = dim - 1; j >= 0; j--) {
+      for (let j = dim - 2; j >= 0; j--) {
         if (!isEmpty(cells[j][i]) && callback(direction, cells, j, i)) {
           return true;
         }
@@ -71,7 +91,7 @@ export function traverseAndActOnCells(direction, cells, callback) {
   }
   else if (direction === directions.RIGHT) {
     for (let i = 0; i < dim; i++) {
-      for (let j = dim - 1; j >= 0; j--) {
+      for (let j = dim - 2; j >= 0; j--) {
         if (!isEmpty(cells[i][j]) && callback(direction, cells, i, j)) {
           return true;
         }
@@ -113,7 +133,10 @@ export function mergeCells(direction, cells, _x, _y) {
   scoreUpdate += isMerged ? val : 0;
 
   if (isMerged && val % 2048 === 0) didPlayerWin = true;
-  if (isMerged) didMoveOrMerge = true;
+  if (isMerged) {
+    didMoveOrMerge = true;
+    didMoveOrMergeInLoop = true;
+  }
 
   cells[_x][_y] = 0;
   cells[x][y] = val;
