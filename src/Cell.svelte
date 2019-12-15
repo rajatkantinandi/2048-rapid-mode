@@ -18,7 +18,6 @@
     8192: "eight192",
     16384: "one6384",
     32768: "three2768",
-    32768: "three2768",
     65536: "six5536"
   };
 </script>
@@ -32,11 +31,13 @@
     background: #fbe9e7;
     border: 1px solid #3e2723;
     border-radius: 15px;
-    font-size: 50px;
+    font-size: 45px;
     line-height: 100px;
     box-shadow: 0px 0px 10px -2px black;
     box-sizing: border-box;
     animation: pop 0.3s ease-out;
+    font-family: "Audiowide", sans-serif;
+    opacity: 0.9;
   }
 
   @keyframes pop {
@@ -92,59 +93,59 @@
 
   .oneTwentyEight {
     background: radial-gradient(yellow, rgb(243, 243, 110));
-    font-size: 40px;
+    font-size: 35px;
   }
 
   .twoFiveSix {
     background: radial-gradient(orange, rgb(243, 187, 83));
-    font-size: 40px;
+    font-size: 35px;
     color: white;
   }
 
   .fiveOneTwo {
     background: radial-gradient(rgb(190, 106, 50), rgb(223, 137, 79));
-    font-size: 40px;
+    font-size: 35px;
     color: white;
   }
 
   .one024 {
     background: radial-gradient(rgb(175, 231, 19), rgb(193, 247, 45));
-    font-size: 35px;
+    font-size: 28px;
   }
 
   .two048 {
     background: radial-gradient(green, rgb(11, 204, 11));
-    font-size: 35px;
+    font-size: 25px;
     color: #fbe9e7;
   }
 
   .four096 {
     background: radial-gradient(indigo, rgb(107, 8, 177));
-    font-size: 35px;
+    font-size: 25px;
     color: #fbe9e7;
   }
 
   .eight192 {
     background: radial-gradient(#4444cc, #4466ee);
-    font-size: 35px;
+    font-size: 28px;
     color: #fbe9e7;
   }
 
   .one6384 {
     background: radial-gradient(#04a4aa, #44c699);
-    font-size: 28px;
+    font-size: 23px;
     color: white;
   }
 
   .three2768 {
     background: radial-gradient(green, #a4c622 150%);
-    font-size: 28px;
+    font-size: 23px;
     color: white;
   }
 
   .six5536 {
     background: radial-gradient(purple, hotpink 200%);
-    font-size: 28px;
+    font-size: 23px;
     color: white;
   }
 

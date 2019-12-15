@@ -59,7 +59,11 @@
 </script>
 
 <style>
-  @import url("https://fonts.googleapis.com/css?family=Audiowide&display=swap");
+  @import url('https://fonts.googleapis.com/css?family=Audiowide|Comfortaa|Pacifico&display=swap');
+
+  body {
+    font-family: 'Comfortaa', sans-serif;
+  }
 
   button {
     cursor: pointer;

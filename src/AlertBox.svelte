@@ -23,6 +23,7 @@
     font-size: 35px;
     text-align: center;
     animation: appear 0.5s ease-out;
+    font-family: 'Pacifico', cursive;
   }
 
   @keyframes appear {
