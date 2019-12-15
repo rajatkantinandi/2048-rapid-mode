@@ -1,5 +1,4 @@
-//function to generate random integer in a range
-import { canMergeAnyCells } from './cell';
+import { getEmptyIndices } from './cell';
 
 export function randInt(from, to) {
   return Math.floor(Math.random() * (to - from)) + from;
@@ -39,19 +38,6 @@ export const initCells = (degree) => {
   return cells;
 }
 
-const getEmptyIndices = (cells) => {
-  const emptyIndices = [];
-  const dim = cells.length;
-
-  for (let i = 0; i < dim; i++) {
-    for (let j = 0; j < dim; j++) {
-      if (cells[i][j] === 0) emptyIndices.push({ i, j });
-    }
-  }
-
-  return emptyIndices;
-}
-
 export function createNewCell(cells) {
   const emptyIndices = getEmptyIndices(cells);
 
@@ -60,9 +46,7 @@ export function createNewCell(cells) {
     const newCellIdx = emptyIndices[randInt(0, emptyIndices.length - 1)];
 
     cells[newCellIdx.i][newCellIdx.j] = val;
-    return cells;
   }
-  else if (canMergeAnyCells(cells)) {
-    return cells;
-  }
+
+  return cells;
 }

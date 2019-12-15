@@ -1,4 +1,4 @@
-let scoreUpdate = 0, didPlayerWin = false;
+let scoreUpdate = 0, didPlayerWin = false, didMoveOrMerge = false;
 
 export const directions = {
   RIGHT: 'ArrowRight',
@@ -11,6 +11,7 @@ export function moveCell(direction, cells, x, y) {
   const dim = cells.length;
   const val = cells[x][y];
   cells[x][y] = 0;
+  const initX = x, initY = y;
 
   if (direction === directions.RIGHT) {
     while (y < dim - 1 && isEmpty(cells[x][y + 1])) y++;
@@ -26,14 +27,16 @@ export function moveCell(direction, cells, x, y) {
   }
 
   cells[x][y] = val;
+
+  if (initX !== x || initY !== y) didMoveOrMerge = true;
 }
 
 export function moveCells(direction, cells) {
-  scoreUpdate = 0, didPlayerWin = false;
+  scoreUpdate = 0, didPlayerWin = false, didMoveOrMerge = false;
   traverseAndActOnCells(direction, cells, moveCell);
   traverseAndActOnCells(direction, cells, mergeCells);
   traverseAndActOnCells(direction, cells, moveCell);
-  return { cells, scoreUpdate, didPlayerWin };
+  return { cells, scoreUpdate, didPlayerWin, didMoveOrMerge };
 }
 
 export function traverseAndActOnCells(direction, cells, callback) {
@@ -110,6 +113,7 @@ export function mergeCells(direction, cells, _x, _y) {
   scoreUpdate += isMerged ? val : 0;
 
   if (isMerged && val % 2048 === 0) didPlayerWin = true;
+  if (isMerged) didMoveOrMerge = true;
 
   cells[_x][_y] = 0;
   cells[x][y] = val;
@@ -124,6 +128,33 @@ export function canMergeAnyCells(cells) {
   for (let direction in directions) {
     const canMerge = traverseAndActOnCells(directions[direction], cells, canMergeCells);
     if (canMerge) return true;
+  }
+
+  return false;
+}
+
+export const checkGameOver = cells => !hasAnyEmptyCell(cells) && !canMergeAnyCells(cells);
+
+export const getEmptyIndices = (cells) => {
+  const emptyIndices = [];
+  const dim = cells.length;
+
+  for (let i = 0; i < dim; i++) {
+    for (let j = 0; j < dim; j++) {
+      if (cells[i][j] === 0) emptyIndices.push({ i, j });
+    }
+  }
+
+  return emptyIndices;
+}
+
+const hasAnyEmptyCell = (cells) => {
+  const dim = cells.length;
+
+  for (let i = 0; i < dim; i++) {
+    for (let j = 0; j < dim; j++) {
+      if (cells[i][j] === 0) return true;
+    }
   }
 
   return false;

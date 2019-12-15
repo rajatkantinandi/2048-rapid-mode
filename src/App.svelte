@@ -3,10 +3,10 @@
   import Cell from "./Cell.svelte";
   import NewGameBtn from "./NewGame.svelte";
   import AlertBox from "./AlertBox.svelte";
-  import { moveCells, directions } from "./helpers/cell";
+  import { moveCells, directions, checkGameOver } from "./helpers/cell";
 
   let cells = JSON.parse(localStorage.getItem("cells")) || initCells(4);
-  let isGameOver = false;
+  let isGameOver = checkGameOver(cells);
   let didPlayerWin = false;
   let score = parseInt(localStorage.getItem("score")) || 0;
   let topScore = parseInt(localStorage.getItem("top-score")) || 0;
@@ -23,14 +23,17 @@
       restart();
     } else if (Object.values(directions).indexOf(ev.key) >= 0) {
       const moveCellsData = moveCells(ev.key, cells);
-      const freshCells = createNewCell(moveCellsData.cells);
+      const freshCells = moveCellsData.didMoveOrMerge
+        ? createNewCell(moveCellsData.cells)
+        : null;
 
-      if (moveCellsData.didPlayerWin) didPlayerWin = true;
+      if (freshCells) {
+        updateCells(freshCells);
+        handleScoreUpdate(moveCellsData.scoreUpdate);
+        if (moveCellsData.didPlayerWin) didPlayerWin = true;
+      }
 
-      handleScoreUpdate(moveCellsData.scoreUpdate);
-
-      if (freshCells) updateCells(freshCells);
-      else isGameOver = true;
+      if (checkGameOver(cells)) isGameOver = true;
     }
   }
 
@@ -52,7 +55,7 @@
   const continueGame = () => {
     didPlayerWin = false;
     document.body.focus();
-  }
+  };
 </script>
 
 <style>
