@@ -38,6 +38,7 @@
     animation: pop 0.3s ease-out;
     font-family: "Audiowide", sans-serif;
     opacity: 0.9;
+    user-select: none;
   }
 
   @keyframes pop {

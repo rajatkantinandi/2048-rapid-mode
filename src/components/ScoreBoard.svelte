@@ -16,15 +16,16 @@
     text-align: center;
     margin-right: 10px;
     background: linear-gradient(to bottom, #131 30%, #011101 50%);
-    height: 50px;
+    height: 60px;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     padding: 0 15px;
+    white-space: nowrap;
   }
 </style>
 
 <div class="scoreboard">
-  {#if score}Score{:else}Top Score{/if}
-  <div class="score">{score || topScore}</div>
+  {#if score !== undefined}Score{:else}Top Score{/if}
+  <div class="score">{score !== undefined ? score : topScore}</div>
 </div>

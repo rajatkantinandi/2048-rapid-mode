@@ -2,11 +2,13 @@
   import { initCells, createNewCell } from "./helpers/gererator";
   import { moveCells, directions, checkGameOver } from "./helpers/cell";
   import SwipeHelper from "./helpers/swipeHelper";
-  import Cell from "./Cell.svelte";
-  import NewGameBtn from "./NewGame.svelte";
-  import AlertBox from "./AlertBox.svelte";
-  import GameModeSwitch from "./GameModeSwitch.svelte";
-  import ScoreBoard from "./ScoreBoard.svelte";
+  import Cell from "./components/Cell.svelte";
+  import NewGameBtn from "./components/NewGame.svelte";
+  import AlertBox from "./components/AlertBox.svelte";
+  import GameModeSwitch from "./components/GameModeSwitch.svelte";
+  import ScoreBoard from "./components/ScoreBoard.svelte";
+  import Header from "./components/Header.svelte";
+  import { onMount } from 'svelte';
 
   let cells = JSON.parse(localStorage.getItem("cells")) || initCells(4);
   let isGameOver = checkGameOver(cells);
@@ -16,11 +18,15 @@
   let gameMode = localStorage.getItem("gameMode") || "Rapid";
   let swipeHelper = new SwipeHelper();
 
+  onMount(() => {
+    document.querySelector("main").focus();
+  });
+
   const restart = () => {
     cells = initCells(4);
     isGameOver = false;
     handleScoreUpdate(-score);
-    document.body.focus();
+    document.querySelector("main").focus();
   };
 
   function handleKeyDown(ev) {
@@ -63,15 +69,17 @@
 
   const continueGame = () => {
     didPlayerWin = false;
-    document.body.focus();
+    document.querySelector("main").focus();
   };
 
   const setGameMode = mode => {
     gameMode = mode;
     localStorage.setItem("gameMode", mode);
+    document.querySelector("main").focus();
   };
 
   function handleTouchEnd(ev) {
+    ev.preventDefault();
     const direction = swipeHelper.handleTouchEnd(ev);
     play(direction);
   }
@@ -79,10 +87,6 @@
 
 <style>
   @import url("https://fonts.googleapis.com/css?family=Audiowide|Comfortaa|Pacifico&display=swap");
-
-  body {
-    font-family: "Comfortaa", sans-serif;
-  }
 
   button {
     cursor: pointer;
@@ -93,6 +97,16 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    font-family: "Comfortaa", sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    transform-origin: 50% 10%;
+  }
+
+  main {
+    outline: none;
   }
 
   .scoring {
@@ -100,21 +114,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-  }
-  h1 {
-    display: flex;
-    flex-direction: row;
-    margin: 5px;
-    height: 60px;
-  }
-
-  h1 .cell {
-    margin: 1px;
-    position: relative;
-    font-size: 35px;
-    height: 48px;
-    width: 60px;
-    padding-top: 6px;
+    margin-bottom: 20px;
   }
 
   .board {
@@ -141,7 +141,7 @@
 
   @media (max-width: 400px) {
     .game {
-      transform: scale(0.7);
+      transform: scale(0.72);
     }
     h1 {
       margin-bottom: 10px;
@@ -160,22 +160,18 @@
   }
 </style>
 
-<body on:keydown={handleKeyDown} tabindex="0" autofocus>
+<div>
   <div class="game">
-    <h1>
-      <Cell value="2" small />
-      <Cell value="0" small />
-      <Cell value="4" small />
-      <Cell value="8" small />
-    </h1>
+    <Header />
     <GameModeSwitch {gameMode} {setGameMode} />
     <div class="scoring">
       <ScoreBoard {score} />
       <ScoreBoard {topScore} />
       <NewGameBtn onClick={restart} />
     </div>
-    <hr />
-    <div
+    <main
+      on:keydown={handleKeyDown}
+      tabindex="0"
       class="board"
       on:touchstart={ev => swipeHelper.handleTouchStart(ev)}
       on:touchend={handleTouchEnd}>
@@ -184,7 +180,7 @@
           <Cell value={cell} />
         {/each}
       {/each}
-    </div>
+    </main>
   </div>
   {#if isGameOver}
     <AlertBox message="Game Over" okAction={restart} />
@@ -195,4 +191,4 @@
       okAction={continueGame}
       okText="Continue" />
   {/if}
-</body>
+</div>
