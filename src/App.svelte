@@ -3,12 +3,12 @@
   import { moveCells, directions, checkGameOver } from "./helpers/cell";
   import SwipeHelper from "./helpers/swipeHelper";
   import Cell from "./components/Cell.svelte";
-  import NewGameBtn from "./components/NewGame.svelte";
+  import Button from "./components/Button.svelte";
   import AlertBox from "./components/AlertBox.svelte";
   import GameModeSwitch from "./components/GameModeSwitch.svelte";
   import ScoreBoard from "./components/ScoreBoard.svelte";
   import Header from "./components/Header.svelte";
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
 
   let cells = JSON.parse(localStorage.getItem("cells")) || initCells(4);
   let isGameOver = checkGameOver(cells);
@@ -17,6 +17,7 @@
   let topScore = parseInt(localStorage.getItem("top-score")) || 0;
   let gameMode = localStorage.getItem("gameMode") || "Rapid";
   let swipeHelper = new SwipeHelper();
+  let restartWarning = null;
 
   onMount(() => {
     document.querySelector("main").focus();
@@ -24,6 +25,7 @@
 
   const restart = () => {
     cells = initCells(4);
+    localStorage.setItem("cells", JSON.stringify(cells));
     isGameOver = false;
     handleScoreUpdate(-score);
     document.querySelector("main").focus();
@@ -73,9 +75,31 @@
   };
 
   const setGameMode = mode => {
+    restartWarning = {
+      message:
+        "Changing game mode will reset your progress.<br/>Are you sure you want to continue?",
+      action: () => {
+        changeGameModeNRestart(mode);
+        restartWarning = null;
+      }
+    };
+  };
+
+  const changeGameModeNRestart = mode => {
     gameMode = mode;
     localStorage.setItem("gameMode", mode);
-    document.querySelector("main").focus();
+    restart();
+  };
+
+  const confirmRestart = () => {
+    restartWarning = {
+      message:
+        "This will reset your progress.<br/>Are you sure you want to continue?",
+      action: () => {
+        restart();
+        restartWarning = null;
+      }
+    };
   };
 
   function handleTouchEnd(ev) {
@@ -167,7 +191,7 @@
     <div class="scoring">
       <ScoreBoard {score} />
       <ScoreBoard {topScore} />
-      <NewGameBtn onClick={restart} />
+      <Button type="continue" onClick={confirmRestart} text="New Game" />
     </div>
     <main
       on:keydown={handleKeyDown}
@@ -190,5 +214,13 @@
       message="Congrats!! You have won!"
       okAction={continueGame}
       okText="Continue" />
+  {/if}
+  {#if restartWarning}
+    <AlertBox
+      message={restartWarning.message}
+      okAction={restartWarning.action}
+      okText="Yes"
+      cancelText="No"
+      cancelAction={() => (restartWarning = null)} />
   {/if}
 </div>

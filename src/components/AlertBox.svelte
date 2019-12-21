@@ -1,9 +1,11 @@
 <script>
-  import NewGame from "./NewGame.svelte";
+  import Button from "./Button.svelte";
 
-  export let message;
-  export let okAction;
+  export let message = "";
+  export let okAction = () => {};
   export let okText = "Play Again";
+  export let cancelText = null;
+  export let cancelAction = () => {};
 </script>
 
 <style>
@@ -23,7 +25,7 @@
     font-size: 35px;
     text-align: center;
     animation: appear 0.5s ease-out;
-    font-family: 'Pacifico', cursive;
+    font-family: "Pacifico", cursive;
   }
 
   @keyframes appear {
@@ -41,6 +43,11 @@
 </style>
 
 <div class="alertbox">
-  <div class="message">{message}</div>
-  <NewGame text={okText} onClick={okAction} />
+  <div class="message">{@html message}</div>
+  <div class="buttons">
+    {#if cancelText}
+      <Button type="cancel" text={cancelText} onClick={cancelAction} />
+    {/if}
+    <Button type="continue" text={okText} onClick={okAction} />
+  </div>
 </div>
