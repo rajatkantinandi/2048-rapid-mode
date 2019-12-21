@@ -1,5 +1,3 @@
-import { getEmptyIndices } from './cell';
-
 export function randInt(from, to) {
   return Math.floor(Math.random() * (to - from)) + from;
 }
@@ -38,9 +36,7 @@ export const initCells = (degree) => {
   return cells;
 }
 
-export function createNewCell(cells) {
-  const emptyIndices = getEmptyIndices(cells);
-
+export function createNewCell(cells, emptyIndices) {
   if (emptyIndices.length > 0) {
     const val = Math.random < 0.1 ? 4 : 2;
     const newCellIdx = emptyIndices[randInt(0, emptyIndices.length - 1)];

@@ -1,6 +1,5 @@
 <script>
-  import { initCells, createNewCell } from "./helpers/gererator";
-  import { moveCells, directions, checkGameOver } from "./helpers/cell";
+  import Cells, { directions } from "./helpers/cells";
   import SwipeHelper from "./helpers/swipeHelper";
   import Cell from "./components/Cell.svelte";
   import Button from "./components/Button.svelte";
@@ -10,8 +9,9 @@
   import Header from "./components/Header.svelte";
   import { onMount } from "svelte";
 
-  let cells = JSON.parse(localStorage.getItem("cells")) || initCells(4);
-  let isGameOver = checkGameOver(cells);
+  let cells = Cells(4);
+  let cellsToRender = cells.getCells();
+  let isGameOver = cells.checkGameOver();
   let didPlayerWin = false;
   let score = parseInt(localStorage.getItem("score")) || 0;
   let topScore = parseInt(localStorage.getItem("top-score")) || 0;
@@ -24,8 +24,8 @@
   });
 
   const restart = () => {
-    cells = initCells(4);
-    localStorage.setItem("cells", JSON.stringify(cells));
+    cells = Cells(4, true);
+    cellsToRender = cells.getCells();
     isGameOver = false;
     handleScoreUpdate(-score);
     document.querySelector("main").focus();
@@ -40,18 +40,16 @@
   }
 
   function play(direction) {
-    const moveCellsData = moveCells(direction, cells, gameMode);
-    const freshCells = moveCellsData.didMoveOrMerge
-      ? createNewCell(moveCellsData.cells)
-      : null;
+    const didMoveOrMerge = cells.moveCells(direction, gameMode);
 
-    if (freshCells) {
-      updateCells(freshCells);
-      handleScoreUpdate(moveCellsData.scoreUpdate);
-      if (moveCellsData.didPlayerWin) didPlayerWin = true;
+    if (didMoveOrMerge) {
+      cells.generate();
+      updateCells();
+      handleScoreUpdate(cells.getScoreUpdate());
+      if (cells.checkPlayerWin()) didPlayerWin = true;
     }
 
-    if (checkGameOver(cells)) isGameOver = true;
+    if (cells.checkGameOver()) isGameOver = true;
   }
 
   function handleScoreUpdate(scoreUpdate) {
@@ -64,9 +62,8 @@
     }
   }
 
-  function updateCells(freshCells) {
-    cells = freshCells;
-    localStorage.setItem("cells", JSON.stringify(freshCells));
+  function updateCells() {
+    cellsToRender = cells.getCells();
   }
 
   const continueGame = () => {
@@ -199,7 +196,7 @@
       class="board"
       on:touchstart={ev => swipeHelper.handleTouchStart(ev)}
       on:touchend={handleTouchEnd}>
-      {#each cells as row}
+      {#each cellsToRender as row}
         {#each row as cell}
           <Cell value={cell} />
         {/each}
