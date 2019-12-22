@@ -17,24 +17,26 @@
   let topScore = parseInt(localStorage.getItem("top-score")) || 0;
   let gameMode = localStorage.getItem("gameMode") || "Rapid";
   let swipeHelper = new SwipeHelper();
-  let restartWarning = null;
+  let dialog = null;
 
   onMount(() => {
-    document.querySelector("main").focus();
+    resetFocus();
   });
 
   const restart = () => {
     cells = Cells(4, true);
-    cellsToRender = cells.getCells();
+    updateCells();
     isGameOver = false;
     handleScoreUpdate(-score);
-    document.querySelector("main").focus();
+    hideDialog();
   };
 
   function handleKeyDown(ev) {
+    // Alt + N to restart
     if (ev.altKey && ev.which === 78) {
-      restart();
+      confirmRestart();
     } else if (Object.values(directions).indexOf(ev.key) >= 0) {
+      // Arrow Keys to move
       play(ev.key);
     }
   }
@@ -68,16 +70,15 @@
 
   const continueGame = () => {
     didPlayerWin = false;
-    document.querySelector("main").focus();
+    resetFocus();
   };
 
   const setGameMode = mode => {
-    restartWarning = {
+    dialog = {
       message:
         "Changing game mode will reset your progress.<br/>Are you sure you want to continue?",
       action: () => {
         changeGameModeNRestart(mode);
-        restartWarning = null;
       }
     };
   };
@@ -89,18 +90,27 @@
   };
 
   const confirmRestart = () => {
-    restartWarning = {
+    dialog = {
       message:
         "This will reset your progress.<br/>Are you sure you want to continue?",
       action: () => {
         restart();
-        restartWarning = null;
       }
     };
   };
 
+  function hideDialog() {
+    dialog = null;
+    resetFocus();
+  }
+
+  function resetFocus() {
+    document.querySelector("main").focus();
+  }
+
   function handleTouchEnd(ev) {
     ev.preventDefault();
+    // get swipe direction from helper
     const direction = swipeHelper.handleTouchEnd(ev);
     play(direction);
   }
@@ -212,12 +222,12 @@
       okAction={continueGame}
       okText="Continue" />
   {/if}
-  {#if restartWarning}
+  {#if dialog}
     <AlertBox
-      message={restartWarning.message}
-      okAction={restartWarning.action}
+      message={dialog.message}
+      okAction={dialog.action}
       okText="Yes"
       cancelText="No"
-      cancelAction={() => (restartWarning = null)} />
+      cancelAction={hideDialog} />
   {/if}
 </div>
