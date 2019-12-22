@@ -1,6 +1,8 @@
 <script>
+  import Button from "./Button.svelte";
   export let gameMode;
   export let setGameMode;
+  export let showInstructions;
 
   function handleModeChange(ev) {
     setGameMode(ev.target.innerText);
@@ -32,6 +34,10 @@
     margin-left: 10px;
   }
 
+  .mode-toggle:nth-child(2) {
+    margin-right: 20px;
+  }
+
   .selected {
     background: #11cc00;
   }
@@ -58,4 +64,5 @@
     on:click={handleModeChange}>
     Normal
   </button>
+  <Button type="help" text="How to Play" onClick={showInstructions} />
 </nav>

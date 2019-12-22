@@ -8,7 +8,7 @@
   button {
     border: 1px solid #abc;
     border-radius: 20px;
-    padding: 10px 25px;
+    padding: 10px 20px;
     color: white;
     font-size: 18px;
     cursor: pointer;
@@ -32,6 +32,15 @@
 
   .cancel:hover {
     background: #abc;
+    box-shadow: 1px 2px 5px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  .help {
+    background: rgb(28, 48, 216);
+  }
+
+  .help:hover {
+    background: indigo;
     box-shadow: 1px 2px 5px 0 rgba(0, 0, 0, 0.25);
   }
 </style>

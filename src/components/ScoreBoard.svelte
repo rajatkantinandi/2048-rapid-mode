@@ -14,7 +14,7 @@
     color: white;
     border-radius: 10px;
     text-align: center;
-    margin-right: 10px;
+    margin-right: 25px;
     background: linear-gradient(to bottom, #131 30%, #011101 50%);
     height: 60px;
     display: flex;
@@ -22,6 +22,7 @@
     justify-content: space-evenly;
     padding: 0 15px;
     white-space: nowrap;
+    min-width: 100px;
   }
 </style>
 

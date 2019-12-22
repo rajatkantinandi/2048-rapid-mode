@@ -4,10 +4,11 @@
   import Cell from "./components/Cell.svelte";
   import Button from "./components/Button.svelte";
   import AlertBox from "./components/AlertBox.svelte";
-  import GameModeSwitch from "./components/GameModeSwitch.svelte";
+  import Nav from "./components/Nav.svelte";
   import ScoreBoard from "./components/ScoreBoard.svelte";
   import Header from "./components/Header.svelte";
   import { onMount } from "svelte";
+  import { howToPlay } from "./constants/howToPlay";
 
   let cells = Cells(4);
   let cellsToRender = cells.getCells();
@@ -23,14 +24,6 @@
     resetFocus();
   });
 
-  const restart = () => {
-    cells = Cells(4, true);
-    updateCells();
-    isGameOver = false;
-    handleScoreUpdate(-score);
-    hideDialog();
-  };
-
   function handleKeyDown(ev) {
     // Alt + N to restart
     if (ev.altKey && ev.which === 78) {
@@ -39,6 +32,13 @@
       // Arrow Keys to move
       play(ev.key);
     }
+  }
+
+  function handleTouchEnd(ev) {
+    ev.preventDefault();
+    // get swipe direction from helper
+    const direction = swipeHelper.handleTouchEnd(ev);
+    play(direction);
   }
 
   function play(direction) {
@@ -79,7 +79,9 @@
         "Changing game mode will reset your progress.<br/>Are you sure you want to continue?",
       action: () => {
         changeGameModeNRestart(mode);
-      }
+      },
+      okText: "Yes",
+      cancelText: "No"
     };
   };
 
@@ -95,9 +97,23 @@
         "This will reset your progress.<br/>Are you sure you want to continue?",
       action: () => {
         restart();
-      }
+      },
+      okText: "Yes",
+      cancelText: "No"
     };
   };
+
+  const restart = () => {
+    cells = Cells(4, true);
+    updateCells();
+    isGameOver = false;
+    handleScoreUpdate(-score);
+    hideDialog();
+  };
+
+  function showInstructions() {
+    dialog = howToPlay;
+  }
 
   function hideDialog() {
     dialog = null;
@@ -106,13 +122,6 @@
 
   function resetFocus() {
     document.querySelector("main").focus();
-  }
-
-  function handleTouchEnd(ev) {
-    ev.preventDefault();
-    // get swipe direction from helper
-    const direction = swipeHelper.handleTouchEnd(ev);
-    play(direction);
   }
 </script>
 
@@ -144,7 +153,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     margin-bottom: 20px;
   }
 
@@ -194,7 +203,7 @@
 <div>
   <div class="game">
     <Header />
-    <GameModeSwitch {gameMode} {setGameMode} />
+    <Nav {gameMode} {setGameMode} {showInstructions} />
     <div class="scoring">
       <ScoreBoard {score} />
       <ScoreBoard {topScore} />
@@ -214,7 +223,7 @@
     </main>
   </div>
   {#if isGameOver}
-    <AlertBox message="Game Over" okAction={restart} />
+    <AlertBox message="Game Over" okAction={restart} okText="Play Again" />
   {/if}
   {#if didPlayerWin}
     <AlertBox
@@ -226,8 +235,9 @@
     <AlertBox
       message={dialog.message}
       okAction={dialog.action}
-      okText="Yes"
-      cancelText="No"
-      cancelAction={hideDialog} />
+      okText={dialog.okText}
+      cancelText={dialog.cancelText}
+      cancelAction={hideDialog}
+      notFancy={dialog.notFancy} />
   {/if}
 </div>
