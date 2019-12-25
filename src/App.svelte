@@ -17,7 +17,7 @@
   let score = parseInt(localStorage.getItem("score")) || 0;
   let topScore = parseInt(localStorage.getItem("top-score")) || 0;
   let gameMode = localStorage.getItem("gameMode") || "Rapid";
-  let swipeHelper = new SwipeHelper();
+  let swipeHelper = new SwipeHelper(5);
   let dialog = null;
 
   onMount(() => {
