@@ -38,7 +38,7 @@ export const initCells = (degree) => {
 
 export function createNewCell(cells, emptyIndices) {
   if (emptyIndices.length > 0) {
-    const val = Math.random < 0.1 ? 4 : 2;
+    const val = Math.random() < 0.1 ? 4 : 2;
     const newCellIdx = emptyIndices[randInt(0, emptyIndices.length - 1)];
 
     cells[newCellIdx.i][newCellIdx.j] = val;

@@ -45,7 +45,7 @@
 
   .message {
     margin: 0 15px 20px 15px;
-    overflow: auto;
+    overflow-y: auto;
     max-height: 80%;
     max-width: 600px;
     line-height: 1.3em;
