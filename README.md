@@ -7,7 +7,7 @@ Supports both swipe & arrow keys.
 
 Now Progressive Web App
 
-Live link: https://rapid2048.now.sh/
+Live link: https://rapid2048.vercel.app/
 
 <h2>HOW TO Play</h2>
 <p>
