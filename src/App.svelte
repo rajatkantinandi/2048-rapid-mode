@@ -75,8 +75,9 @@
 
   const setGameMode = mode => {
     dialog = {
+      title: "Changing game mode will reset your progress.",
       message:
-        "Changing game mode will reset your progress.<br/>Are you sure you want to continue?",
+        "Are you sure you want to continue?",
       action: () => {
         changeGameModeNRestart(mode);
       },
@@ -93,8 +94,9 @@
 
   const confirmRestart = () => {
     dialog = {
+      title: "This will reset your progress.",
       message:
-        "This will reset your progress.<br/>Are you sure you want to continue?",
+        "Are you sure you want to continue?",
       action: () => {
         restart();
       },
@@ -227,12 +229,14 @@
   {/if}
   {#if didPlayerWin}
     <AlertBox
-      message="Congrats!! You have won!"
+      title="Congrats!!"
+      message="You have won!"
       okAction={continueGame}
       okText="Continue" />
   {/if}
   {#if dialog}
     <AlertBox
+      title={dialog.title}
       message={dialog.message}
       okAction={dialog.action}
       okText={dialog.okText}

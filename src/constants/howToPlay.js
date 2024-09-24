@@ -1,6 +1,6 @@
 export const howToPlay = {
+  title: "How to Play",
   message: `
-  <h2>HOW TO Play</h2>
   <p>
     Move tiles by swiping or Arrow keys. 
     Combine 2 consecutive similar tiles to make bigger tiles.

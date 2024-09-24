@@ -1,6 +1,7 @@
 <script>
   import Button from "./Button.svelte";
 
+  export let title = "";
   export let message = "";
   export let okAction = () => null;
   export let okText = null;
@@ -24,14 +25,13 @@
     animation: appear 0.5s ease-out;
     font-size: 20px;
     color: white;
+    padding: 0 20px;
   }
 
   .fancyAlertBox {
     background: linear-gradient(45deg, #133, rgba(0, 0, 0, 0.4), #133),
       linear-gradient(-45deg, #133, rgba(0, 0, 0, 0.4), #133);
-    font-family: "Pacifico", cursive;
     text-align: center;
-    font-size: 35px;
   }
 
   @keyframes appear {
@@ -43,19 +43,33 @@
     }
   }
 
+  .title {
+    font-family: "Pacifico", cursive;
+    font-size: 24px;
+    margin-bottom: 15px;
+    line-height: 30px;
+  }
+
   .message {
     margin: 0 15px 20px 15px;
     overflow-y: auto;
     max-height: 80%;
     max-width: 600px;
-    line-height: 1.3em;
+    font-size: 18px;
   }
 </style>
 
 <div class={'alertbox' + (notFancy ? '' : ' fancyAlertBox')}>
-  <div class="message">
-    {@html message}
-  </div>
+  {#if title}
+    <div class="title">
+      {title}
+    </div>
+  {/if}
+  {#if message}
+    <div class="message">
+      {@html message}
+    </div>
+  {/if}
   <div class="buttons">
     {#if cancelText}
       <Button type="cancel" text={cancelText} onClick={cancelAction} />
