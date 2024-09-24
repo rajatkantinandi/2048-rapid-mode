@@ -73,20 +73,23 @@
     resetFocus();
   };
 
-  const setGameMode = mode => {
-    dialog = {
-      title: "Changing game mode will reset your progress.",
-      message:
-        "Are you sure you want to continue?",
-      action: () => {
-        changeGameModeNRestart(mode);
-      },
-      okText: "Yes",
-      cancelText: "No"
-    };
+  const setGameMode = (mode) => {
+    if (score > 0) {
+      dialog = {
+        title: "Changing game mode will reset your progress.",
+        message: "Are you sure you want to continue?",
+        action: () => {
+          changeGameModeNRestart(mode);
+        },
+        okText: "Yes",
+        cancelText: "No",
+      };
+    } else {
+      changeGameModeNRestart(mode);
+    }
   };
 
-  const changeGameModeNRestart = mode => {
+  const changeGameModeNRestart = (mode) => {
     gameMode = mode;
     localStorage.setItem("gameMode", mode);
     restart();
@@ -95,13 +98,12 @@
   const confirmRestart = () => {
     dialog = {
       title: "This will reset your progress.",
-      message:
-        "Are you sure you want to continue?",
+      message: "Are you sure you want to continue?",
       action: () => {
         restart();
       },
       okText: "Yes",
-      cancelText: "No"
+      cancelText: "No",
     };
   };
 
@@ -127,12 +129,57 @@
   }
 </script>
 
+<div>
+  <div class="game">
+    <Header />
+    <Nav {gameMode} {setGameMode} {showInstructions} />
+    <div class="scoring">
+      <ScoreBoard {score} />
+      <ScoreBoard {topScore} />
+      <Button type="continue" onClick={confirmRestart} text="New Game" />
+    </div>
+    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+    <main
+      on:keydown={handleKeyDown}
+      tabindex="0"
+      class="board"
+      on:touchstart={(ev) => swipeHelper.handleTouchStart(ev)}
+      on:touchend={handleTouchEnd}
+    >
+      {#each cellsToRender as row}
+        {#each row as cell}
+          <Cell value={cell} />
+        {/each}
+      {/each}
+    </main>
+  </div>
+  {#if isGameOver}
+    <AlertBox message="Game Over" okAction={restart} okText="Play Again" />
+  {/if}
+  {#if didPlayerWin}
+    <AlertBox
+      title="Congrats!!"
+      message="You have won!"
+      okAction={continueGame}
+      okText="Continue"
+    />
+  {/if}
+  {#if dialog}
+    <AlertBox
+      title={dialog.title}
+      message={dialog.message}
+      okAction={dialog.action}
+      okText={dialog.okText}
+      cancelText={dialog.cancelText}
+      cancelAction={hideDialog}
+      notFancy={dialog.notFancy}
+    />
+  {/if}
+</div>
+
 <style>
   @import url("https://fonts.googleapis.com/css?family=Audiowide|Comfortaa|Pacifico&display=swap");
-
-  button {
-    cursor: pointer;
-  }
 
   .game {
     display: flex;
@@ -175,19 +222,11 @@
     .game {
       transform: scale(0.85);
     }
-    h1 {
-      margin-bottom: 10px;
-      font-size: 26px;
-    }
   }
 
   @media (max-width: 400px) {
     .game {
       transform: scale(0.72);
-    }
-    h1 {
-      margin-bottom: 10px;
-      font-size: 24px;
     }
   }
 
@@ -195,53 +234,5 @@
     .game {
       transform: scale(0.6);
     }
-    h1 {
-      margin-bottom: 10px;
-      font-size: 20px;
-    }
   }
 </style>
-
-<div>
-  <div class="game">
-    <Header />
-    <Nav {gameMode} {setGameMode} {showInstructions} />
-    <div class="scoring">
-      <ScoreBoard {score} />
-      <ScoreBoard {topScore} />
-      <Button type="continue" onClick={confirmRestart} text="New Game" />
-    </div>
-    <main
-      on:keydown={handleKeyDown}
-      tabindex="0"
-      class="board"
-      on:touchstart={ev => swipeHelper.handleTouchStart(ev)}
-      on:touchend={handleTouchEnd}>
-      {#each cellsToRender as row}
-        {#each row as cell}
-          <Cell value={cell} />
-        {/each}
-      {/each}
-    </main>
-  </div>
-  {#if isGameOver}
-    <AlertBox message="Game Over" okAction={restart} okText="Play Again" />
-  {/if}
-  {#if didPlayerWin}
-    <AlertBox
-      title="Congrats!!"
-      message="You have won!"
-      okAction={continueGame}
-      okText="Continue" />
-  {/if}
-  {#if dialog}
-    <AlertBox
-      title={dialog.title}
-      message={dialog.message}
-      okAction={dialog.action}
-      okText={dialog.okText}
-      cancelText={dialog.cancelText}
-      cancelAction={hideDialog}
-      notFancy={dialog.notFancy} />
-  {/if}
-</div>
