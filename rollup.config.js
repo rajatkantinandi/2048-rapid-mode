@@ -1,12 +1,12 @@
-import svelte from 'rollup-plugin-svelte';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import livereload from 'rollup-plugin-livereload';
-import { terser } from 'rollup-plugin-terser';
+const svelte = require('rollup-plugin-svelte');
+const resolve = require('@rollup/plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
+const livereload = require('rollup-plugin-livereload');
+const terser = require('@rollup/plugin-terser');
 
 const production = !process.env.ROLLUP_WATCH;
 
-export default {
+module.exports = {
 	input: 'src/main.js',
 	output: {
 		sourcemap: true,
@@ -29,7 +29,7 @@ export default {
 		// npm, you'll most likely need these plugins. In
 		// some cases you'll need additional configuration —
 		// consult the documentation for details:
-		// https://github.com/rollup/rollup-plugin-commonjs
+		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
 			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
