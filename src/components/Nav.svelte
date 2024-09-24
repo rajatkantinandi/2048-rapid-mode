@@ -14,8 +14,8 @@
     border-radius: 0 10px 10px 0;
     padding: 5px 20px;
     font-size: 1em;
-    background: grey;
-    color: white;
+    background: #ddd;
+    color: #333;
     border: none;
     cursor: pointer;
     opacity: 0.8;
@@ -39,7 +39,8 @@
   }
 
   .selected {
-    background: #11cc00;
+    background: #731139;
+    color: #fff;
   }
 
   nav {

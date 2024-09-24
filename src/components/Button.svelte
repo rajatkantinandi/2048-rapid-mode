@@ -45,4 +45,4 @@
   }
 </style>
 
-<button class={type} id="newgame" on:click={onClick}>{text}</button>
+<button class={type} on:click={onClick}>{text}</button>
