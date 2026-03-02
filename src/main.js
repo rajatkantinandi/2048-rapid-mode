@@ -1,7 +1,8 @@
 import App from './App.svelte';
+import { mount } from 'svelte';
 import { register } from '../service-worker';
 
-const app = new App({
+const app = mount(App, {
 	target: document.body,
 	props: {
 		name: 'world'
